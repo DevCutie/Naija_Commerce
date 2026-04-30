@@ -1,36 +1,32 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Naija Commerce 🇳🇬
 
-## Getting Started
+A high-performance e-commerce platform built with **Next.js 15**, focused on the Nigerian market. This project explores the fundamentals of the App Router, Server Components, and optimized routing patterns.
 
-First, run the development server:
+## 🚀 Key Features 
+- **Nested Layouts:** Implemented a global root layout and a specialized shop layout with a persistent sidebar.
+- **Route Grouping:** Organized authentication and shopping logic using `(auth)` and `(shop)` groups to keep URLs clean.
+- **Modern Tooling:** Powered by **Biome** for lightning-fast linting and formatting (replacing the ESLint/Prettier combo).
+- **Type Safety:** Built with **TypeScript** for robust, error-free development.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🛠 Tech Stack
+- **Framework:** Next.js 15 (App Router)
+- **Styling:** Tailwind CSS 4.0
+- **Linting/Formatting:** Biome
+- **Package Manager:** pnpm
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 📁 Project Structure
+Brief overview of the `app/` directory:
+- `app/layout.tsx` - Global provider and base shell.
+- `app/(shop)/` - Group for all commerce routes (Products, Cart).
+- `app/(auth)/` - Group for authentication (Login, Register).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🚦 Getting Started
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Prerequisites
+- Node.js (Latest LTS)
+- pnpm `corepack enable pnpm`
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Installation
+1. Clone the repo:
+   ```bash
+   git clone [https://github.com/YOUR_USERNAME/naija_commerce.git](https://github.com/YOUR_USERNAME/naija_commerce.git)
