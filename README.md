@@ -1,4 +1,6 @@
 # Naija Commerce 🇳🇬
+vercel: naija-commerce-iota.vercel.app
+
 
 A high-performance e-commerce platform built with **Next.js 15**, focused on the Nigerian market. This project explores the fundamentals of the App Router, Server Components, and optimized routing patterns.
 
