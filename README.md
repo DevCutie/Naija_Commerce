@@ -29,6 +29,7 @@ Brief overview of the `app/` directory:
 - pnpm `corepack enable pnpm`
 
 ### Installation
-1. Clone the repo:
-   ```bash
-   git clone [https://github.com/YOUR_USERNAME/naija_commerce.git](https://github.com/YOUR_USERNAME/naija_commerce.git)
+Clone the repo:
+
+Bash
+git clone https://github.com/DevCutie/Naija_Commerce.git
