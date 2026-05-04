@@ -30,6 +30,4 @@ Brief overview of the `app/` directory:
 
 ### Installation
 Clone the repo:
-
-Bash
 git clone https://github.com/DevCutie/Naija_Commerce.git
