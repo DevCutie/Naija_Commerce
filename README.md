@@ -39,3 +39,6 @@ git clone https://github.com/DevCutie/Naija_Commerce.git
 cd Naija_Commerce
 pnpm install
 pnpm dev
+```
+
+
