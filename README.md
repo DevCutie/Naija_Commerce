@@ -35,7 +35,7 @@ Brief overview of the core architecture:
 ### Installation
 Clone the repo and start the development server:
 ```bash
- git clone https://github.com/DevCutie/Naija_Commerce.git
+git clone https://github.com/DevCutie/Naija_Commerce.git
 cd Naija_Commerce
 pnpm install
 pnpm dev
