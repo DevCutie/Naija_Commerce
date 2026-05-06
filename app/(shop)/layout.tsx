@@ -1,7 +1,3 @@
-import React from 'react'
-
-export const layout = () => {
-  return (
-    <div>layout</div>
-  )
+export default function DesignLayout({ children }: { children: React.ReactNode }) {
+  return <>{children}</>;
 }
