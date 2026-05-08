@@ -6,6 +6,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -130,14 +131,12 @@ export default function DesignSystemPage() {
         </section>
 
 
-        <section className="space-y-4 pt-8">
+       <section className="space-y-4 pt-8">
           <h2 className="text-2xl font-bold border-b pb-2">7. Dialog</h2>
           <Dialog>
-        
             <DialogTrigger asChild>
-              <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                Open Dialog
-              </button>
+              {/* We replaced the standard button with your shadcn Button! */}
+              <Button>Open Dialog</Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
               <DialogHeader>
@@ -153,18 +152,13 @@ export default function DesignSystemPage() {
           </Dialog>
         </section>
 
-
         <section className="space-y-4 pt-8 pb-12">
           <h2 className="text-2xl font-bold border-b pb-2">8. Theme Toggle</h2>
-          <p className="text-sm text-gray-500 mb-2">
-            (Visual mockup. Actual dark mode requires next-themes setup!)
-          </p>
-          <button className="flex items-center gap-2 px-4 py-2 border rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-            <Sun className="h-4 w-4" />
-            <span>Toggle Theme</span>
-            <Moon className="h-4 w-4 ml-2 opacity-50" />
-          </button>
+    
+          <div className="bg-white dark:bg-slate-900 p-6 border rounded-lg inline-block">
+             <ThemeToggle />
+          </div>
         </section>
     </div>
   );
-}
+}     
