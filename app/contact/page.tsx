@@ -68,13 +68,13 @@ export default function ContactPage() {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="example@gmail.com" {...field} />
+                  <Input type="email" placeholder="example@gmail.com" {...field} /> 
                 </FormControl>
-
-                <FormMessage />
+                <FormMessage /> 
               </FormItem>
             )}
           />
+
 
           <FormField
             control={form.control}
@@ -83,31 +83,34 @@ export default function ContactPage() {
               <FormItem>
                 <FormLabel>Phone</FormLabel>
                 <FormControl>
-                  <Input placeholder="+234..." {...field} />
+                  <Input type="tel" placeholder="+234..." {...field} /> 
                 </FormControl>
-
-                <FormMessage />
+                <FormMessage /> 
               </FormItem>
             )}
           />
+
 
           <FormField
             control={form.control}
             name="message"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>message</FormLabel>
+                <FormLabel>Message</FormLabel>
                 <FormControl>
-                  <Textarea placeholder="Put in a meassage...." {...field} />
+                  <Textarea placeholder="Put in a message..." {...field} /> 
                 </FormControl>
-
-                <FormMessage />
+                <FormMessage /> 
               </FormItem>
             )}
           />
 
-          <Button type="submit" className="w-full">
-            Send Message
+          <Button 
+            type="submit" 
+            className="w-full" 
+            disabled={form.formState.isSubmitting}
+          >
+            {form.formState.isSubmitting ? "Sending..." : "Send Message"}
           </Button>
         </form>
       </Form>
