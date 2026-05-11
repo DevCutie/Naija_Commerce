@@ -1,0 +1,9 @@
+Day 5 Developer Journal: Forms & Server Actions
+What I Built
+Today, I successfully built a production-ready, highly secure contact form for the Naija Commerce platform using Next.js 15. I connected a sleek shadcn/ui frontend to a secure backend Server Action. I utilized React Hook Form to handle uncontrolled state management and integrated Zod to enforce strict data validation—including a custom regular expression to validate Nigerian phone numbers. Finally, I wired up Sonner to provide satisfying, instant toast notifications for user feedback.
+
+What Broke
+I navigated several real-world engineering hurdles today. First, a sneaky TypeScript chain reaction was caused by a simple capitalization typo (Phone versus phone). Then, I ran into a bleeding-edge version conflict between the newly released Zod v4 and @hookform/resolvers, which I resolved by strategically downgrading Zod to a stable version (v3.23.8). My Next.js development server also crashed due to a blocked port from a background process I had to terminate manually. Finally, I encountered a massive Hydration Mismatch error—which looked terrifying but was actually just a browser extension injecting code before React could load. I fixed this by adding suppressHydrationWarning to my layout's body tag.
+
+What I Don't Yet Understand
+While I successfully wired everything together, the underlying magic of Next.js Server Actions still feels a bit mysterious. I know putting "use server" at the top of a file creates a secure tunnel between the client and the backend, but I don't fully grasp how it bypasses the need for traditional API routes under the hood. Additionally, I want to dive deeper into React Hook Form to fully understand exactly how its "uncontrolled" approach avoids constant component re-renders to achieve such high performance.
