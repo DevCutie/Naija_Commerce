@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
-// 1. THIS IMPORT MUST BE HERE
+import { Toaster } from "@/components/ui/sonner";
+
 import { ThemeProvider } from '@/components/theme-provider'; 
 
 export const metadata: Metadata = {
@@ -14,11 +15,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    // 2. THIS suppressHydrationWarning MUST BE HERE
-    <html lang="en" className="h-full antialiased" suppressHydrationWarning>
-      <body className="min-h-full flex flex-col">
-        
-        {/* 3. THIS WRAPPER MUST BE HERE */}
+<html lang="en" className="h-full antialiased" suppressHydrationWarning>
+
+      <body className="min-h-full flex flex-col" suppressHydrationWarning>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -26,9 +25,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {children}
+          <Toaster />
         </ThemeProvider>
-        
       </body>
     </html>
-  );
+     );
 }
