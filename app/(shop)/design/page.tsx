@@ -1,164 +1,48 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+"use client";
+
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "@/components/theme-toggle";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import { Moon, Sun } from "lucide-react";
-
-export default function DesignSystemPage() {
+export default function DesignPage() {
   return (
-    <div className="container mx-auto py-10 space-y-12">
-      <div className="space-y-4">
-        <h1 className="text-3xl font-bold tracking-tight">Design System</h1>
-        <p className="text-muted-foreground">
-          A living styleguide for Naija Commerce UI components.
-        </p>
-      </div>
+    <div className="p-10 space-y-12 max-w-4xl mx-auto">
+      <h1 className="text-3xl font-bold mb-8">Design System</h1>
 
-      <section className="space-y-4">
-        <h2 className="text-xl font-semibold border-b pb-2">
-          1. Cards & Pricing
-        </h2>
-        <div className="grid gap-4 md:grid-cols-3">
-          <Card>
-            <CardHeader>
-              <CardTitle>Basic Plan</CardTitle>
-              <CardDescription>Perfect for getting started</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-4xl font-bold">₦12,500.00</p>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
-
-      <section className="space-y-4">
-        <h2 className="text-xl font-semibold border-b pb-2">2. Buttons</h2>
-
-        <div className="flex flex-wrap gap-4">
-          <Button>Checkout</Button>
-          <Button variant="secondary">Cancel</Button>
-          <Button variant="destructive">Delete</Button>
-        </div>
-      </section>
-
-      <section className="space-y-4">
-        <h2 className="text-xl font-semibold border-b pb-2">3. Badges</h2>
-        <div className="flex flex-wrap gap-4">
-          <Badge>New Arrival</Badge>
-          <Badge variant="secondary">Featured</Badge>
-          <Badge variant="destructive">Out of Stock</Badge>
-        </div>
-      </section>
-
-      <section className="space-y-4">
-        <h2 className="text-xl font-semibold border-b pb-2">4. Inputs</h2>
-        <div className="max-w-sm">
-          <Input type="email" placeholder="Email address" />
+      <section className="space-y-4 p-6 border rounded-lg">
+        <h2 className="text-xl font-semibold border-b pb-2">Toasts (Notifications)</h2>
+        <p className="text-sm text-gray-500 mb-4">Click the buttons to test the Sonner setup.</p>
+        
+        <div className="flex gap-4">
+          <Button onClick={() => toast.success("Successfully updated profile!")}>
+            Test Success Toast
+          </Button>
+          <Button variant="destructive" onClick={() => toast.error("Failed to connect to server.")}>
+            Test Error Toast
+          </Button>
         </div>
       </section>
 
 
-        <section className="space-y-4 pt-8">
-          <h2 className="text-2xl font-bold border-b pb-2">5. Avatars</h2>
-          <div className="flex gap-4">
-            <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-            <Avatar>
-              <AvatarImage src="" alt="Broken Link" />
-              <AvatarFallback className="bg-slate-900 text-white">DC</AvatarFallback>
-            </Avatar>
-          </div>
-        </section>
+      <section className="space-y-4 p-6 border rounded-lg">
+        <h2 className="text-xl font-semibold border-b pb-2">Tabs</h2>
+        <p className="text-sm text-gray-500 mb-4">Testing the shadcn tab interface.</p>
 
-  
-        <section className="space-y-4 pt-8">
-          <h2 className="text-2xl font-bold border-b pb-2">6. Table</h2>
-          <div className="border rounded-md">
-            <Table>
-              <TableCaption>A list of recent orders.</TableCaption>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[100px]">Order</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Method</TableHead>
-                  <TableHead className="text-right">Amount</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                <TableRow>
-                  <TableCell className="font-medium">ORD-001</TableCell>
-                  <TableCell>Paid</TableCell>
-                  <TableCell>Credit Card</TableCell>
-                  <TableCell className="text-right">₦25,000</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className="font-medium">ORD-002</TableCell>
-                  <TableCell>Pending</TableCell>
-                  <TableCell>Bank Transfer</TableCell>
-                  <TableCell className="text-right">₦12,500</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </div>
-        </section>
+        <Tabs defaultValue="account" className="w-[400px]">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="account">Account</TabsTrigger>
+            <TabsTrigger value="password">Password</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="account" className="p-4 border rounded-md mt-2">
+            Make changes to your account here.
+          </TabsContent>
+          <TabsContent value="password" className="p-4 border rounded-md mt-2">
+            Change your password here.
+          </TabsContent>
+        </Tabs>
+      </section>
 
-
-       <section className="space-y-4 pt-8">
-          <h2 className="text-2xl font-bold border-b pb-2">7. Dialog</h2>
-          <Dialog>
-            <DialogTrigger asChild>
-              {/* We replaced the standard button with your shadcn Button! */}
-              <Button>Open Dialog</Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
-              <DialogHeader>
-                <DialogTitle>Edit profile</DialogTitle>
-                <DialogDescription>
-                  Make changes to your profile here. Click save when you're done.
-                </DialogDescription>
-              </DialogHeader>
-              <div className="py-4 text-sm text-gray-500">
-                (Imagine a really cool form goes right here.)
-              </div>
-            </DialogContent>
-          </Dialog>
-        </section>
-
-        <section className="space-y-4 pt-8 pb-12">
-          <h2 className="text-2xl font-bold border-b pb-2">8. Theme Toggle</h2>
-    
-          <div className="bg-white dark:bg-slate-900 p-6 border rounded-lg inline-block">
-             <ThemeToggle />
-          </div>
-        </section>
     </div>
   );
-}     
+}
