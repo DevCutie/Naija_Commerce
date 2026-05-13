@@ -8,3 +8,8 @@ Almost every step of the connection process threw an error, but I managed to tro
 
 What I Don't Yet Understand
 While my backend vault is live, the bridge to the frontend is still a bit foggy. I understand how to push data into the database, but I don't fully grasp how Next.js Server Components will query it out—especially when I need to join multiple tables (like fetching a product, its variants, and inventory levels simultaneously). I also left the user_id optional on the carts table to allow guest checkouts, but I am not entirely sure how I will seamlessly link an anonymous cart to a permanent user account once they finally log in.
+
+**Day 6 Checkpoint Questions:**
+1. **Supabase or Neon?** I chose Supabase. While Neon is incredibly fast for pure Postgres, an e-commerce platform inherently requires user authentication (for carts/checkout) and asset storage (for product images). Having Auth and Storage bundled with the database layer in Supabase prevents me from having to stitch together three separate services later.
+2. **.env.example stub?** Yes. `DATABASE_URL` is stubbed and explicitly notes to use port `5432` for direct Drizzle migrations.
+3. **README commands?** Yes. The `README.md` now explicitly outlines the database setup flow: `pnpm drizzle-kit generate`, `pnpm drizzle-kit push`, and `pnpm run seed`.

@@ -68,10 +68,17 @@ export const orderItems = pgTable("order_items", {
 
 
 
-export const productsRelations = relations(products, ({ many }) => ({
-  variants: many(variants),
+export const categoriesRelations = relations(categories, ({ many }) => ({
+  products: many(products),
 }));
 
+export const productsRelations = relations(products, ({ many, one }) => ({
+  variants: many(variants),
+  category: one(categories, {
+    fields: [products.categoryId],
+    references: [categories.id],
+  }),
+}));
 export const variantsRelations = relations(variants, ({ one }) => ({
   product: one(products, {
     fields: [variants.productId],
