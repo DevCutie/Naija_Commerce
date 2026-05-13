@@ -1,5 +1,5 @@
 import { config } from "dotenv";
-config({ path: ".env" }); 
+config({ path: ".env.local" });
 
 import postgres from "postgres";
 import { drizzle } from "drizzle-orm/postgres-js";
