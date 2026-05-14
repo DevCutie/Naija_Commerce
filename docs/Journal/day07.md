@@ -1,0 +1,9 @@
+Day 07: Server Components, Streaming, and Caching Realities
+What I Built
+Today was all about moving logic to the server and improving perceived performance. I built a server-rendered product grid on the root (/) that queries Supabase directly via Drizzle. I also wired up dynamic routing for individual product pages (/products/[id]). The biggest architectural win was implementing React Suspense to stream a "Related Products" component. Instead of blocking the entire page load while waiting for a secondary database query, the main product details render instantly, and the related items stream in asynchronously. Finally, I implemented search filtering using URL parameters (?q=...), wiring it up with Drizzle's ilike operator and optimistic UI updates for an instant feel.
+
+What Broke
+Infrastructure and tooling fought back today. First, a typo in my environment filename (.env.local.) caused a massive ECONNREFUSED crash because Next.js couldn't find the connection string. I also ran into Next.js's infamous "negative time stamp" error; it turned out to be a corrupted local cache, which I resolved by nuking the .next folder. Later, my app and database fell out of sync (column products.price_kobo does not exist). I ran npx drizzle-kit push and carefully used the CLI to rename the column rather than dropping it, preserving my seeded data. Finally, a greedy .env* rule in my .gitignore silently swallowed my .env.example file, which I had to explicitly override using !.env.example.
+
+What I Don't Yet Understand
+While I read the Next.js caching documentation, the mental model hasn't completely clicked. I am still a bit fuzzy on the practical boundaries between force-dynamic and Incremental Static Regeneration (ISR). Furthermore, while I know I will need to use revalidateTag or revalidatePath when a user eventually mutates their cart, predicting exactly how the Next.js Client Router Cache will handle those invalidations still feels a bit like magic.
