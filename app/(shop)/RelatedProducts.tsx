@@ -17,9 +17,8 @@ export default async function RelatedProducts({ categoryId }: { categoryId: stri
       <h2 className="text-2xl font-bold mb-6">You might also like</h2>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
         
-
-        {related.map((product) => (
-          <Link key={product.id} href={`/products/${product.id}`} className="group block">
+{related.map((product) => (
+          <Link key={product.id} href={`/products/${product.slug}`} className="group block">
             <div className="border rounded-lg p-4 transition-shadow hover:shadow-md">
               <div className="aspect-square bg-slate-100 rounded-md mb-3 flex items-center justify-center text-slate-400 text-sm">
                 [Image]

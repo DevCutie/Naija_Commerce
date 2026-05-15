@@ -3,28 +3,30 @@ import { products } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
-
 import RelatedProducts from "../../RelatedProducts";
+import RelatedProductsSkeleton from "../../RelatedProductsSkeleton";
 
 export default async function ProductPage({
   params,
 }: {
-  params: Promise<{ id: string }>;
+ 
+  params: Promise<{ slug: string }>; 
 }) {
   const resolvedParams = await params;
-  const productId = resolvedParams.id;
+
+  const productSlug = resolvedParams.slug; 
 
   const product = await db.query.products.findFirst({
-    where: eq(products.id, productId),
+
+    where: eq(products.slug, productSlug), 
   });
 
   if (!product) {
     notFound();
   }
-
   return (
     <div className="container mx-auto py-10 px-4">
-      {/* Top Section: Main Product Details */}
+ 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
         <div className="aspect-square bg-slate-100 rounded-xl flex items-center justify-center text-slate-400 text-2xl font-bold">
           [Image Placeholder]
@@ -48,11 +50,9 @@ export default async function ProductPage({
         </div>
       </div>
 
-
-      <Suspense fallback={<div className="mt-20 text-xl font-bold text-gray-400 animate-pulse">Loading related products...</div>}>
+<Suspense fallback={<RelatedProductsSkeleton />}>
         <RelatedProducts categoryId={product.categoryId} />
       </Suspense>
-
     </div>
   );
 }
