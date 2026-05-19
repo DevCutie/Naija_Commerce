@@ -21,8 +21,8 @@ return NextResponse.redirect(new URL("/login ", request.url));
 
 }
 
-
-if (path.startsWith("/dashboard") && session?.user?.role === "customer") {
+// RULE B: The Role Check (Default-Deny Pattern)
+  if (path.startsWith("/dashboard") && session.user.role !== "merchant") {
     return NextResponse.redirect(new URL("/account", request.url));
   }
   return NextResponse.next();
