@@ -8,6 +8,18 @@ export const auth = betterAuth({
     provider: "pg", 
   }),
 
+
+  user: {
+    additionalFields: {
+      role: { 
+        type: "string", 
+        defaultValue: "customer", 
+        input: false 
+      },
+    },
+  },
+
+
   emailAndPassword: {
     enabled: true,
   },
@@ -18,8 +30,8 @@ export const auth = betterAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     },
   },
+  
   plugins: [
-
     magicLink({
       sendMagicLink: async ({ email, token, url }) => {
         console.log(`\n🪄 MAGIC LINK FOR ${email}:\n${url}\n`);
