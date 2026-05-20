@@ -75,7 +75,7 @@ export const users = pgTable("user", {
   image: text("image"),
   createdAt: timestamp("created_at").notNull(),
   updatedAt: timestamp("updated_at").notNull(),
-role: text('role').default('customer'),
+role: text('role').default('customer').notNull(),
 });
 
 export const sessions = pgTable("session", {

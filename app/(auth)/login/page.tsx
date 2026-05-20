@@ -5,7 +5,7 @@ import { authClient } from "@/lib/auth-client";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -46,11 +46,11 @@ export default function LoginPage() {
 
     if (error) {
 
-      alert(error.message || "Failed to send magic link. Please try again.");
+      toast.error(error.message || "Failed to send magic link.");
       return;
     }
 
-    alert("Magic link sent! Check your email.");
+   toast.success("Magic link sent! Check your email.");
   }
 
   return (
