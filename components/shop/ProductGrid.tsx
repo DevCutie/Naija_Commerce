@@ -1,5 +1,7 @@
 "use client";
 
+
+
 import { useOptimistic, useTransition, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
@@ -31,13 +33,16 @@ const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleSearch = (term: string) => {
 
-    setOptimisticProducts(term);
+
 
 
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
 
+startTransition(() => {
+      setOptimisticProducts(term); 
+    });
 
     timeoutRef.current = setTimeout(() => {
       startTransition(() => {
@@ -51,6 +56,9 @@ const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
         router.replace(`/?${params.toString()}`); 
       });
     }, 300); 
+
+
+    
   };
 
   return (

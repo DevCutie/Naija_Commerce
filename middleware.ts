@@ -3,13 +3,13 @@ import type { NextRequest } from "next/server";
 import { betterFetch } from "@better-fetch/fetch";
 import type { Session, User } from "better-auth/types";
 
-// The Boss's custom type extension
+
 type UserWithRole = User & { role: "customer" | "merchant" };
 
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
-  // The perfectly typed fetch call
+
   const { data: session } = await betterFetch<{ session: Session; user: UserWithRole } | null>("/api/auth/get-session", {
     baseURL: request.nextUrl.origin,
     headers: {
