@@ -9,39 +9,38 @@ import { syncCartItemToDB } from "@/app/actions/cart";
 
 interface AddToCartProps {
   product: {
-    id: string;
+    id: string; // This is the Product ID
     name: string;
     priceKobo: number;
     image?: string;
   };
-  userId?: string; 
+  variantId: string; 
+  userId?: string | null; 
 }
 
 export default function AddToCartButton({ 
   product, 
-  userId = "test-user-123"
+  variantId,
+  userId = null 
 }: AddToCartProps) {
   
   const addItem = useCartStore((state) => state.addItem);
-  
-
   const [isPending, startTransition] = useTransition();
 
   const handleAdd = () => {
-
     startTransition(async () => {
-      
 
-      const result = await syncCartItemToDB(userId, product.id, 1);
-
-      if (!result.success) {
-        toast.error("Network error. Could not add to cart.");
-        return; 
+      if (userId) {
+        const result = await syncCartItemToDB(userId, variantId, 1);
+        if (!result.success) {
+          toast.error("Network error. Could not sync to your account.");
+          return;
+        }
       }
 
 
       addItem({
-        variantId: product.id, 
+        variantId: variantId,
         productId: product.id,
         name: product.name,
         priceKobo: product.priceKobo,
@@ -64,8 +63,7 @@ export default function AddToCartButton({
       ) : (
         <ShoppingCart className="mr-2 h-4 w-4" />
       )}
-      
-      {isPending ? "Adding to Cart..." : "Add to Cart"}
+      {isPending ? "Adding..." : "Add to Cart"}
     </Button>
   );
 }

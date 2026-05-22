@@ -6,6 +6,7 @@ import { Suspense } from "react";
 import RelatedProducts from "../../RelatedProducts";
 import RelatedProductsSkeleton from "../../RelatedProductsSkeleton";
 import AddToCartButton from "@/components/AddToCartButton";
+import { variants } from "@/lib/db/schema"; 
 
 export default async function ProductPage({
   params,
@@ -13,8 +14,8 @@ export default async function ProductPage({
   params: Promise<{ slug: string }>;
 }) {
   const resolvedParams = await params;
-
   const productSlug = resolvedParams.slug;
+
 
   const product = await db.query.products.findFirst({
     where: eq(products.slug, productSlug),
@@ -23,6 +24,17 @@ export default async function ProductPage({
   if (!product) {
     notFound();
   }
+
+ 
+  const variant = await db.query.variants.findFirst({
+    where: eq(variants.productId, product.id),
+  });
+
+
+  if (!variant) {
+    return <div>Product is currently out of stock (no variant found).</div>;
+  }
+
   return (
     <div className="container mx-auto py-10 px-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
@@ -39,15 +51,16 @@ export default async function ProductPage({
             }).format(product.priceKobo / 100)}
           </p>
           <p className="text-muted-foreground mb-8">
-            {product.description ||
-              "No description available for this product."}
+            {product.description || "No description available for this product."}
           </p>
+      
           <AddToCartButton
             product={{
               id: product.id,
               name: product.name,
               priceKobo: product.priceKobo,
             }}
+            variantId={variant.id}
           />
         </div>
       </div>
