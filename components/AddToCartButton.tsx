@@ -9,13 +9,13 @@ import { syncCartItemToDB } from "@/app/actions/cart";
 
 interface AddToCartProps {
   product: {
-    id: string; // This is the Product ID
+    id: string;
     name: string;
     priceKobo: number;
     image?: string;
   };
-  variantId: string; 
-  userId?: string | null; 
+  variantId: string;
+  userId?: string | null;
 }
 
 export default function AddToCartButton({ 
@@ -28,16 +28,18 @@ export default function AddToCartButton({
   const [isPending, startTransition] = useTransition();
 
   const handleAdd = () => {
+    const currentQuantity = useCartStore.getState().items.find(i => i.variantId === variantId)?.quantity || 0;
+    const newQuantity = currentQuantity + 1;
+
     startTransition(async () => {
 
       if (userId) {
-        const result = await syncCartItemToDB(userId, variantId, 1);
+        const result = await syncCartItemToDB(userId, variantId, newQuantity);
         if (!result.success) {
           toast.error("Network error. Could not sync to your account.");
           return;
         }
       }
-
 
       addItem({
         variantId: variantId,

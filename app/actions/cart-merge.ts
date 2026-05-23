@@ -2,9 +2,10 @@
 
 import { db } from "@/lib/db";
 import { carts, cartItems } from "@/lib/db/schema";
+import { CartItem } from "@/store/use-cart-store";
 import { eq, and } from "drizzle-orm";
 
-export async function mergeGuestCart(userId: string, guestItems: any[]) {
+export async function mergeGuestCart(userId: string, guestItems: CartItem[]){
   try {
 
     let [userCart] = await db.select().from(carts).where(eq(carts.userId, userId));
