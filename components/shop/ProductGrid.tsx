@@ -5,15 +5,17 @@
 import { useOptimistic, useTransition, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { ProductWithCategory } from "@/lib/db/schema";
 import { type InferSelectModel } from "drizzle-orm";
 import { products, categories } from "@/lib/db/schema";
 
 
-type ProductWithCategory = InferSelectModel<typeof products> & {
-  category: InferSelectModel<typeof categories> | null;
-};
+interface ProductGridProps {
+  initialProducts: ProductWithCategory[];
+} 
 
-export default function ProductGrid({ initialProducts }: { initialProducts: ProductWithCategory[] }) {
+
+export default function ProductGrid({ initialProducts }: ProductGridProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();

@@ -1,8 +1,18 @@
 import { db } from "@/lib/db";
-import { products } from "@/lib/db/schema";
+import { products, categories as categoriesSchema } from "@/lib/db/schema";
 import { ilike } from "drizzle-orm";
 import { getCategories } from "@/lib/db/queries";
 import ProductGrid from "@/components/shop/ProductGrid";
+
+import { getTableColumns, eq } from "drizzle-orm"; 
+
+type ProductWithCategory = typeof products.$inferSelect & {
+  category: {
+    id: string;
+    name: string;
+    slug: string;
+  } | null;
+};
 
 export default async function ShopPage({
   searchParams,
@@ -20,18 +30,26 @@ export default async function ShopPage({
   const params = await searchParams;
   const searchQuery = params.q;
 
-  const inventoryData = await db.query.products.findMany({
-    where: searchQuery ? ilike(products.name, `%${searchQuery}%`) : undefined,
-    with: { category: true },
-    limit: 20,
-  });
+const inventoryData: ProductWithCategory[] = await db
+  .select({
+    ...getTableColumns(products),
+    category: {
+      id: categoriesSchema.id,
+      name: categoriesSchema.name,
+      slug: categoriesSchema.slug,
+    },
+  })
+  .from(products)
+  .leftJoin(categoriesSchema, eq(products.category_id, categoriesSchema.id))
+  .where(searchQuery ? ilike(products.name, `%${searchQuery}%`) : undefined)
+  .limit(20);
   return (
-    <div className="container mx-auto py-10 px-4">
-      <h1 className="text-4xl font-bold tracking-tight mb-8">
-        {searchQuery ? `Results for "${searchQuery}"` : "Latest Arrivals"}
-      </h1>
-      
-      <ProductGrid initialProducts={inventoryData}/>
-    </div>
-  );
+  <div className="container mx-auto py-10 px-4">
+    <h1 className="text-4xl font-bold tracking-tight mb-8">
+      {searchQuery ? `Results for "${searchQuery}"` : "Latest Arrivals"}
+    </h1>
+    
+    <ProductGrid initialProducts={inventoryData}/>
+  </div>
+);
 }
