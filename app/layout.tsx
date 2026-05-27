@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import CartDrawer from "@/components/CartDrawer";
 import './globals.css';
 import { Toaster } from "@/components/ui/sonner";
-
+import { CartMerger } from "@/components/CartMerger";
 import { ThemeProvider } from '@/components/theme-provider'; 
 
 export const metadata: Metadata = {
@@ -36,6 +36,7 @@ export default function RootLayout({
           </main>
           
           <Toaster />
+          <CartMerger />
         </ThemeProvider>
       </body>
     </html>

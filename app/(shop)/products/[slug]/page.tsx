@@ -65,9 +65,10 @@ export default async function ProductPage({
         </div>
       </div>
 
-      <Suspense fallback={<RelatedProductsSkeleton />}>
-        <RelatedProducts categoryId={product.categoryId} />
-      </Suspense>
+
+<Suspense fallback={<RelatedProductsSkeleton />}>
+  <RelatedProducts categoryId={product.category_id} />
+</Suspense>
     </div>
   );
 }

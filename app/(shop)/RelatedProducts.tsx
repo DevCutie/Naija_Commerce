@@ -3,15 +3,20 @@ import { products } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import Link from "next/link";
 
-export default async function RelatedProducts({ categoryId }: { categoryId: string }) {
+export default async function RelatedProducts({ categoryId }: { categoryId: string | null | undefined }) {
   
-  const related = await db.query.products.findMany({
-    where: eq(products.categoryId, categoryId), 
-    limit: 4, 
+if (!categoryId) {
+    return <p>No related products found.</p>;
+  }
+
+const related = await db.query.products.findMany({
+    where: eq(products.category_id, categoryId), 
+    limit: 4,
   });
 
-  if (related.length === 0) return null;
-
+  if (related.length === 0) {
+    return <p>No related products in this category.</p>;
+  }
   return (
     <div className="mt-20 border-t pt-10">
       <h2 className="text-2xl font-bold mb-6">You might also like</h2>

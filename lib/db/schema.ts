@@ -14,7 +14,7 @@ export const products = pgTable("products", {
   slug: text("slug").notNull().unique(),
   description: text("description"),
   priceKobo: bigint("price_kobo", { mode: "number" }).notNull(),
-  categoryId: text("category_id").references(() => categories.id).notNull(),
+  category_id: text("category_id").references(() => categories.id).notNull(),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
@@ -115,7 +115,6 @@ export const verifications = pgTable("verification", {
 });
 
 
-
 export const categoriesRelations = relations(categories, ({ many }) => ({
   products: many(products),
 }));
@@ -123,7 +122,7 @@ export const categoriesRelations = relations(categories, ({ many }) => ({
 export const productsRelations = relations(products, ({ many, one }) => ({
   variants: many(variants),
   category: one(categories, {
-    fields: [products.categoryId],
+    fields: [products.category_id],
     references: [categories.id],
   }),
 }));
@@ -167,3 +166,7 @@ export const orderItemsRelations = relations(orderItems, ({ one }) => ({
     references: [variants.id],
   }),
 }));
+
+export type ProductWithCategory = typeof products.$inferSelect & {
+  category: { id: string; name: string; slug: string } | null;
+};
