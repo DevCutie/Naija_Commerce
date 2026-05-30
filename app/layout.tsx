@@ -1,13 +1,15 @@
-import type { Metadata } from 'next';
+import type { Metadata } from "next";
 import CartDrawer from "@/components/CartDrawer";
-import './globals.css';
+import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { CartMerger } from "@/components/CartMerger";
-import { ThemeProvider } from '@/components/theme-provider'; 
+import { ThemeProvider } from "@/components/theme-provider";
+import { QueryProvider } from "@/components/providers/query-provider";
 
 export const metadata: Metadata = {
-  title: 'Naija Commerce',
-  description: 'A high-performance e-commerce platform for the Nigerian market.',
+  title: "Naija Commerce",
+  description:
+    "A high-performance e-commerce platform for the Nigerian market.",
 };
 
 export default function RootLayout({
@@ -24,20 +26,21 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-
           <header className="w-full border-b p-4 flex justify-between items-center">
-            <div className="font-bold text-xl tracking-tight">Naija Commerce</div>
-           <CartDrawer/>
+            <div className="font-bold text-xl tracking-tight">
+              Naija Commerce
+            </div>
+            <CartDrawer />
           </header>
 
-
           <main className="flex-grow">
-            {children}
+            <QueryProvider>{children}</QueryProvider>
           </main>
-          
+
           <Toaster />
           <CartMerger />
         </ThemeProvider>
       </body>
     </html>
-  );}
+  );
+}

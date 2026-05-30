@@ -1,0 +1,10 @@
+What I Built
+The focus was on hardening the foundation. I integrated TanStack Query v5 to manage the "Recently Viewed" products strip, ensuring data persistence via a custom localStorage persister. This significantly improved the responsiveness of the UI by caching product slugs on the client.
+
+The biggest achievement was the CI/CD pipeline. I successfully configured a ci.yml GitHub Action that automates the entire verification process: installing dependencies, running Biome for code consistency, executing the Vitest suite, and triggering Playwright E2E tests. I capped it off by adding a coverage badge to the README, proving that my core logic—cart calculations, Naira formatting, and Zod schema validations—is thoroughly tested.
+
+What Broke
+My local development environment fought me every step of the way. I encountered consistent ENOTFOUND errors when trying to download Playwright browser binaries, likely due to local network/DNS interference. This led to a circular struggle where my vitest suite kept trying to interpret my e2e Playwright test files as unit tests, causing "test not expected here" errors. Consolidating the project structure, explicitly excluding the e2e folder in vitest.config.ts, and finally pushing to GitHub to let the cloud-based Actions runner handle the browser installation were the keys to victory.
+
+What I Don’t Yet Understand
+While I successfully implemented the CI pipeline, I still want to deepen my understanding of Playwright's "Web-First" assertions. I know they are designed to be resilient, but I want to better grasp how to handle race conditions when waiting for dynamic elements—like the checkout summary—to load after a server-side action. I’m also looking forward to experimenting with more complex mocking strategies for the API interactions during E2E testing to ensure the checkout flow is bulletproof.

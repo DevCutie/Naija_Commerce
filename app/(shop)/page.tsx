@@ -30,19 +30,14 @@ export default async function ShopPage({
   const params = await searchParams;
   const searchQuery = params.q;
 
-const inventoryData: ProductWithCategory[] = await db
-  .select({
-    ...getTableColumns(products),
-    category: {
-      id: categoriesSchema.id,
-      name: categoriesSchema.name,
-      slug: categoriesSchema.slug,
-    },
-  })
-  .from(products)
-  .leftJoin(categoriesSchema, eq(products.category_id, categoriesSchema.id))
-  .where(searchQuery ? ilike(products.name, `%${searchQuery}%`) : undefined)
-  .limit(20);
+
+const inventoryData = await db.query.products.findMany({
+  limit: 20,
+  with: {
+    category: true,
+  }
+})
+
   return (
   <div className="container mx-auto py-10 px-4">
     <h1 className="text-4xl font-bold tracking-tight mb-8">
