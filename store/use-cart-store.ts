@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-
 export interface CartItem {
   variantId: string;
   productId: string;
@@ -12,7 +11,7 @@ export interface CartItem {
 }
 
 interface CartStore {
-items: CartItem[];
+  items: CartItem[];
   userId: string | null;
   setUserId: (id: string | null) => void;
   addItem: (item: Omit<CartItem, 'quantity'>) => void;
@@ -30,19 +29,12 @@ export const useCartStore = create<CartStore>()(
       addItem: (newItem) => {
         const { items } = get();
         const existingItem = items.find((i) => i.variantId === newItem.variantId);
-
         if (existingItem) {
-          set({
-            items: items.map((i) =>
-              i.variantId === newItem.variantId ? { ...i, quantity: i.quantity + 1 } : i
-            ),
-          });
+          set({ items: items.map((i) => i.variantId === newItem.variantId ? { ...i, quantity: i.quantity + 1 } : i) });
         } else {
           set({ items: [...items, { ...newItem, quantity: 1 }] });
         }
       },
-      
-     
       updateQuantity: (variantId, quantity) => set({
         items: get().items.map(i => i.variantId === variantId ? { ...i, quantity } : i)
       }),
