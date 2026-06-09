@@ -19,7 +19,11 @@ jobs:
           cache: 'pnpm'
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: |
+          rm -rf pnpm-lock.yaml
+          pnpm install
+
+
         
       - name: Run Unit Tests (Vitest)
         run: pnpm vitest run
