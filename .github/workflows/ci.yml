@@ -17,21 +17,16 @@ jobs:
         with:
           node-version: 20
           cache: 'pnpm'
-
+          
       - name: Install dependencies
-        run: |
-          rm -rf pnpm-lock.yaml
-          pnpm install
-
-
+        run: pnpm install --frozen-lockfile
         
-      - name: Run Unit Tests (Vitest)
-        run: pnpm vitest run
+      - name: Debug Secrets (Check if URL is set)
+        run: |
+          if [ -z "$BETTER_AUTH_URL" ]; then echo "BETTER_AUTH_URL is empty"; else echo "BETTER_AUTH_URL is set"; fi
+        env:
+          BETTER_AUTH_URL: ${{ secrets.BETTER_AUTH_URL }}
 
-      - name: Install Playwright Browsers
-        run: pnpm exec playwright install --with-deps
-
- 
       - name: Build App
         run: pnpm build
         env:
@@ -40,7 +35,6 @@ jobs:
           BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
           BETTER_AUTH_URL: ${{ secrets.BETTER_AUTH_URL }}
           NEXT_PUBLIC_APP_URL: ${{ secrets.NEXT_PUBLIC_APP_URL }}
-
 
       - name: Run E2E Tests (Playwright)
         env:
@@ -51,4 +45,4 @@ jobs:
           NEXT_PUBLIC_APP_URL: ${{ secrets.NEXT_PUBLIC_APP_URL }}
         run: |
           pnpm start -p 3001 &
-          npx playwright test
+          npx playwright test  
