@@ -18,8 +18,9 @@ jobs:
           node-version: 20
           cache: 'pnpm'
           
+
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --no-frozen-lockfile
         
       - name: Debug Secrets (Check if URL is set)
         run: |
@@ -45,4 +46,4 @@ jobs:
           NEXT_PUBLIC_APP_URL: ${{ secrets.NEXT_PUBLIC_APP_URL }}
         run: |
           pnpm start -p 3001 &
-          npx playwright test  
+          npx playwright test
