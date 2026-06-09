@@ -1,18 +1,28 @@
-import { test, expect } from '@playwright/test';
 
-test('user can browse and add product to cart', async ({ page }) => {
-  // 1. Visit the store (ensure your dev server is running!)
-  await page.goto('/');
+import { test, expect } from "@playwright/test";
 
-  // 2. Click on a product (adjust '.product-card' to your actual CSS selector)
-  await page.locator('.product-card').first().click();
+test("browse → add to cart → checkout summary", async ({ page }) => {
 
-  // 3. Add to cart
-  await page.getByRole('button', { name: /add to cart/i }).click();
+  await page.goto("/?bypass-auth=true");
 
-  // 4. Navigate to cart
-  await page.goto('/cart');
 
-  // 5. Verify the cart summary is loaded
-  await expect(page.getByText(/checkout summary/i)).toBeVisible();
+  const productCard = page.getByTestId("product-card").first();
+  await productCard.waitFor({ state: "visible" });
+  await productCard.click();
+
+
+  const addToCartButton = page.getByRole("button", { name: /add to cart/i });
+  await addToCartButton.waitFor({ state: "visible" });
+  await addToCartButton.click();
+
+
+  await page.goto("/checkout?bypass-auth=true");
+
+
+  await expect(page).toHaveURL(/.*checkout.*/);
+  await expect(
+    page.getByRole("heading", { name: /order summary/i })
+  ).toBeVisible();
+
+await expect(page.getByRole("button", { name: /Pay ₦19,700.00/i })).toBeVisible();
 });
