@@ -8,6 +8,8 @@ import RelatedProductsSkeleton from "../../RelatedProductsSkeleton";
 import AddToCartButton from "@/components/AddToCartButton";
 import { variants } from "@/lib/db/schema"; 
 
+export const dynamic = "force-dynamic";
+
 export default async function ProductPage({
   params,
 }: {
