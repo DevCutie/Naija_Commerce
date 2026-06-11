@@ -1,31 +1,27 @@
-import { defineConfig, devices } from "@playwright/test";
+import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
-  testDir: "./e2e",
-  fullyParallel: true,
-  forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
-  reporter: "html",
+  // ... your existing config above ...
 
-  use: {
-    baseURL: "http://localhost:3001", 
-    trace: "on-first-retry",
-  },
-  
   projects: [
+    // 1. Add the setup project
+    {
+      name: 'setup',
+      testMatch: /.*\.setup\.ts/,
+    },
+    
+    // 2. Update your main testing environments
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: { 
+        ...devices['Desktop Chrome'],
+        // Tell Chromium to use the saved cookies
+        storageState: 'playwright/.auth/user.json',
+      },
+      // Tell Playwright to run the 'setup' project before this one
+      dependencies: ['setup'], 
     },
+    
+    // (Repeat the use/dependencies blocks if you test Firefox/WebKit)
   ],
-  
-  webServer: {
-    command: "pnpm start -p 3001",
-    url: "http://localhost:3001", 
-reuseExistingServer: false,
-    timeout: 60 * 1000,
-    stdout: "pipe",
-    stderr: "pipe",
-  },
 });

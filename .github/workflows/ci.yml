@@ -33,6 +33,9 @@ jobs:
           BETTER_AUTH_URL: ${{ secrets.BETTER_AUTH_URL }}
           NEXT_PUBLIC_APP_URL: ${{ secrets.NEXT_PUBLIC_APP_URL }}
 
+      - name: Run Unit Tests (Vitest)
+        run: pnpm vitest run
+
       - name: Run E2E Tests (Playwright)
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
