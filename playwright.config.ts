@@ -1,27 +1,38 @@
-import { defineConfig, devices } from '@playwright/test';
+import { defineConfig, devices } from "@playwright/test";
 
 export default defineConfig({
-	// ... your existing config above ...
 
-	projects: [
-		// 1. Add the setup project
-		{
-			name: 'setup',
-			testMatch: /.*\.setup\.ts/,
-		},
+  testDir: "./e2e",
 
-		// 2. Update your main testing environments
-		{
-			name: 'chromium',
-			use: {
-				...devices['Desktop Chrome'],
-				// Tell Chromium to use the saved cookies
-				storageState: 'playwright/.auth/user.json',
-			},
-			// Tell Playwright to run the 'setup' project before this one
-			dependencies: ['setup'],
-		},
 
-		// (Repeat the use/dependencies blocks if you test Firefox/WebKit)
-	],
+  fullyParallel: true,
+  forbidOnly: !!process.env.CI,
+  retries: process.env.CI ? 2 : 0,
+  workers: process.env.CI ? 1 : undefined,
+  reporter: "html",
+
+  use: {
+    // Base URL to use in actions like `await page.goto('/')`
+    baseURL: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
+    trace: "on-first-retry",
+  },
+
+  projects: [
+    // 1. Setup project (runs first to log in and save cookies)
+    {
+      name: "setup",
+      testMatch: /.*\.setup\.ts/,
+    },
+
+    {
+      name: "chromium",
+      use: {
+        ...devices["Desktop Chrome"],
+
+        storageState: "playwright/.auth/user.json",
+      },
+
+      dependencies: ["setup"],
+    },
+  ],
 });
