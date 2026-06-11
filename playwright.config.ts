@@ -1,38 +1,34 @@
-import { defineConfig, devices } from "@playwright/test";
+import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
+	testDir: './e2e',
 
-  testDir: "./e2e",
+	fullyParallel: true,
+	forbidOnly: !!process.env.CI,
+	retries: process.env.CI ? 2 : 0,
+	workers: process.env.CI ? 1 : undefined,
+	reporter: 'html',
 
+	use: {
+		baseURL: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
+		trace: 'on-first-retry',
+	},
 
-  fullyParallel: true,
-  forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
-  reporter: "html",
+	projects: [
+		{
+			name: 'setup',
+			testMatch: /.*\.setup\.ts/,
+		},
 
-  use: {
-    // Base URL to use in actions like `await page.goto('/')`
-    baseURL: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
-    trace: "on-first-retry",
-  },
+		{
+			name: 'chromium',
+			use: {
+				...devices['Desktop Chrome'],
 
-  projects: [
-    // 1. Setup project (runs first to log in and save cookies)
-    {
-      name: "setup",
-      testMatch: /.*\.setup\.ts/,
-    },
+				storageState: 'playwright/.auth/user.json',
+			},
 
-    {
-      name: "chromium",
-      use: {
-        ...devices["Desktop Chrome"],
-
-        storageState: "playwright/.auth/user.json",
-      },
-
-      dependencies: ["setup"],
-    },
-  ],
+			dependencies: ['setup'],
+		},
+	],
 });
