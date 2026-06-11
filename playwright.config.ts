@@ -10,7 +10,7 @@ export default defineConfig({
 	reporter: 'html',
 
 	use: {
-		baseURL: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
+		baseURL: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001',
 		trace: 'on-first-retry',
 	},
 
@@ -31,4 +31,11 @@ export default defineConfig({
 			dependencies: ['setup'],
 		},
 	],
+
+	webServer: {
+    command: 'pnpm run start -p 3001',
+    url: 'http://localhost:3001',
+    reuseExistingServer: !process.env.CI,
+    timeout: 120 * 1000,
+  },
 });
