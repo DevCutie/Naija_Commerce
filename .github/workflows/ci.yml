@@ -21,6 +21,13 @@ jobs:
       - name: Install dependencies
         run: pnpm install --no-frozen-lockfile
 
+      - name: Run Biome Check
+        run: pnpm biome ci
+
+
+      - name: Run Unit Tests with Coverage
+        run: pnpm vitest run --coverage
+
       - name: Install Playwright Browsers
         run: pnpm exec playwright install --with-deps
         

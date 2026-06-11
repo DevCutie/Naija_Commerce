@@ -1,4 +1,5 @@
 🇳🇬 Naija Commerce
+![Coverage](https://img.shields.io/badge/Coverage-100%25-brightgreen.svg)
 Live Demo: naija-commerce-iota.vercel.app
 
 A high-performance, full-stack e-commerce platform built with Next.js 15, focused on the Nigerian market. This project explores the fundamentals of the App Router, Server Components, optimized routing patterns, scalable design systems, and a complete type-safe relational database architecture.

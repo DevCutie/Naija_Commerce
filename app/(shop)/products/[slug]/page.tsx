@@ -1,12 +1,12 @@
 import { db } from "@/lib/db";
-import { products } from "@/lib/db/schema";
+import { products, variants } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import RelatedProducts from "../../RelatedProducts";
 import RelatedProductsSkeleton from "../../RelatedProductsSkeleton";
 import AddToCartButton from "@/components/AddToCartButton";
-import { variants } from "@/lib/db/schema"; 
+import RecentlyViewed from "@/components/RecentlyViewed";
 
 export const dynamic = "force-dynamic";
 
@@ -18,7 +18,6 @@ export default async function ProductPage({
   const resolvedParams = await params;
   const productSlug = resolvedParams.slug;
 
-
   const product = await db.query.products.findFirst({
     where: eq(products.slug, productSlug),
   });
@@ -27,11 +26,9 @@ export default async function ProductPage({
     notFound();
   }
 
- 
   const variant = await db.query.variants.findFirst({
     where: eq(variants.productId, product.id),
   });
-
 
   if (!variant) {
     return <div>Product is currently out of stock (no variant found).</div>;
@@ -67,10 +64,11 @@ export default async function ProductPage({
         </div>
       </div>
 
+      <Suspense fallback={<RelatedProductsSkeleton />}>
+        <RelatedProducts categoryId={product.category_id} />
+      </Suspense>
 
-<Suspense fallback={<RelatedProductsSkeleton />}>
-  <RelatedProducts categoryId={product.category_id} />
-</Suspense>
+      <RecentlyViewed currentProductId={product.id} />
     </div>
   );
 }
