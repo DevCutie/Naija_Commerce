@@ -20,21 +20,18 @@ jobs:
           
       - name: Install dependencies
         run: pnpm install --no-frozen-lockfile
-        
-      - name: Debug Secrets (Check if URL is set)
-        run: |
-          if [ -z "$BETTER_AUTH_URL" ]; then echo "BETTER_AUTH_URL is empty"; else echo "BETTER_AUTH_URL is set"; fi
-        env:
-          BETTER_AUTH_URL: ${{ secrets.BETTER_AUTH_URL }}
 
+      - name: Install Playwright Browsers
+        run: pnpm exec playwright install --with-deps
+        
       - name: Build App
         run: pnpm build
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
           BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
-          BETTER_AUTH_URL: "http://localhost:3000" 
-          NEXT_PUBLIC_APP_URL: "http://localhost:3000" 
+          BETTER_AUTH_URL: ${{ secrets.BETTER_AUTH_URL }}
+          NEXT_PUBLIC_APP_URL: ${{ secrets.NEXT_PUBLIC_APP_URL }}
 
       - name: Run E2E Tests (Playwright)
         env:
@@ -43,6 +40,4 @@ jobs:
           BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
           BETTER_AUTH_URL: ${{ secrets.BETTER_AUTH_URL }}
           NEXT_PUBLIC_APP_URL: ${{ secrets.NEXT_PUBLIC_APP_URL }}
-        run: |
-          pnpm start -p 3001 &
-          npx playwright test
+        run: npx playwright test
