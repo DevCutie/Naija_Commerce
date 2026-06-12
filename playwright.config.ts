@@ -33,9 +33,9 @@ export default defineConfig({
 	],
 
 	webServer: {
-    command: 'pnpm run start -p 3001',
-    url: 'http://localhost:3001',
-    reuseExistingServer: !process.env.CI,
-    timeout: 120 * 1000,
-  },
+		command: 'pnpm run start -p 3001',
+		url: 'http://localhost:3001',
+		reuseExistingServer: !process.env.CI,
+		timeout: 120 * 1000,
+	},
 });
