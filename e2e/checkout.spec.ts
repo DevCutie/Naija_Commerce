@@ -1,16 +1,23 @@
-import { test as setup } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
-const authFile = 'playwright/.auth/user.json';
+test('browse → add to cart → checkout summary', async ({ page }) => {
+	await page.goto('/products');
 
-setup('authenticate', async ({ page }) => {
-	await page.goto('/login');
+	const productCard = page.getByTestId('product-card').first();
+	await productCard.waitFor({ state: 'visible' });
+	await productCard.click();
 
-	await page.getByPlaceholder('Email').fill('test@example.com');
-	await page.getByPlaceholder('Password').fill('password123');
+	const addToCartButton = page.getByRole('button', { name: /add to cart/i });
+	await addToCartButton.waitFor({ state: 'visible' });
+	await addToCartButton.click();
 
-	await page.getByRole('button', { name: /sign up|sign in|log in/i }).click();
+	await page.goto('/checkout');
 
-	await page.waitForURL('**/products');
-
-	await page.context().storageState({ path: authFile });
+	await expect(page).toHaveURL(/.*checkout.*/);
+	await expect(
+		page.getByRole('heading', { name: /order summary/i }),
+	).toBeVisible();
+	await expect(
+		page.getByRole('button', { name: /Pay ₦19,700.00/i }),
+	).toBeVisible();
 });
