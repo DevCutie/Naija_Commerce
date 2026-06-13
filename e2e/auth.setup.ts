@@ -10,7 +10,8 @@ setup('authenticate', async ({ page }) => {
 
 	await page.getByRole('button', { name: /sign up|sign in|log in/i }).click();
 
-	await page.waitForURL('**/products');
+	// Wait for all network requests to finish, regardless of what page it redirects to
+	await page.waitForLoadState('networkidle');
 
 	await page.context().storageState({ path: authFile });
 });
