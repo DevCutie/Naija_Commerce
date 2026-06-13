@@ -7,7 +7,8 @@ setup('authenticate', async ({ page }) => {
 
 	await page.getByPlaceholder('Email').fill('test@example.com');
 	await page.getByPlaceholder('Password').fill('password123');
-	await page.getByRole('button', { name: 'Sign in' }).click();
+
+	await page.getByRole('button', { name: /sign up|sign in|log in/i }).click();
 
 	await page.waitForURL('**/products');
 
