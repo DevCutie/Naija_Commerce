@@ -21,6 +21,13 @@ jobs:
       - name: Install dependencies
         run: pnpm install --no-frozen-lockfile
 
+      - name: Run Biome Check
+        run: pnpm biome ci
+
+
+      - name: Run Unit Tests with Coverage
+        run: pnpm vitest run --coverage
+
       - name: Install Playwright Browsers
         run: pnpm exec playwright install --with-deps
         
@@ -32,6 +39,9 @@ jobs:
           BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
           BETTER_AUTH_URL: ${{ secrets.BETTER_AUTH_URL }}
           NEXT_PUBLIC_APP_URL: ${{ secrets.NEXT_PUBLIC_APP_URL }}
+
+      - name: Run Unit Tests (Vitest)
+        run: pnpm vitest run
 
       - name: Run E2E Tests (Playwright)
         env:
