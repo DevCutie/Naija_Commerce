@@ -6,7 +6,7 @@ test.describe('Checkout Flow', () => {
 	test('user can add item to cart and reach checkout summary', async ({
 		page,
 	}) => {
-		await page.goto('/products');
+		await page.goto('/');
 
 		await page.waitForSelector('main');
 
@@ -15,13 +15,11 @@ test.describe('Checkout Flow', () => {
 			.locator('button, [role="button"]')
 			.first()
 			.click();
-
 		await page
 			.locator('header')
 			.locator('button, [role="button"]')
 			.last()
 			.click();
-
 		await page.getByRole('link', { name: /Checkout/i }).click();
 
 		await expect(page).toHaveURL(/.*checkout/);
