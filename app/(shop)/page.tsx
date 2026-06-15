@@ -1,15 +1,6 @@
 import ProductGrid from '@/components/shop/ProductGrid';
 import { db } from '@/lib/db';
 import { getCategories } from '@/lib/db/queries';
-import type { products } from '@/lib/db/schema';
-
-type ProductWithCategory = typeof products.$inferSelect & {
-	category: {
-		id: string;
-		name: string;
-		slug: string;
-	} | null;
-};
 
 export default async function ShopPage({
 	searchParams,

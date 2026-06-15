@@ -1,29 +1,29 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 const STORAGE_KEY = 'recently_viewed_products';
 
 export function useRecentlyViewed() {
-  const [viewedIds, setViewedIds] = useState<string[]>([]);
+	const [viewedIds, setViewedIds] = useState<string[]>([]);
 
-  useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) {
-      setViewedIds(JSON.parse(stored));
-    }
-  }, []);
- const addProduct = useCallback((id: string) => {
-    setViewedIds((prevIds) => {
-      let currentIds = [...prevIds];
-      
-      currentIds = currentIds.filter((itemId) => itemId !== id);
-      currentIds.unshift(id);
-      
-      if (currentIds.length > 4) currentIds.pop();
-      
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(currentIds));
-      return currentIds;
-    });
-  }, []); 
+	useEffect(() => {
+		const stored = localStorage.getItem(STORAGE_KEY);
+		if (stored) {
+			setViewedIds(JSON.parse(stored));
+		}
+	}, []);
+	const addProduct = useCallback((id: string) => {
+		setViewedIds((prevIds) => {
+			let currentIds = [...prevIds];
 
-  return { viewedIds, addProduct };
+			currentIds = currentIds.filter((itemId) => itemId !== id);
+			currentIds.unshift(id);
+
+			if (currentIds.length > 4) currentIds.pop();
+
+			localStorage.setItem(STORAGE_KEY, JSON.stringify(currentIds));
+			return currentIds;
+		});
+	}, []);
+
+	return { viewedIds, addProduct };
 }
