@@ -1,7 +1,11 @@
-export default function DesignLayout({
-	children,
-}: {
-	children: React.ReactNode;
-}) {
-	return <>{children}</>;
+export default function ShopLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <>
+      {children}
+    </>
+  );
 }
