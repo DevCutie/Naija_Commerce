@@ -24,12 +24,17 @@ jobs:
       - name: Run Biome Check
         run: pnpm biome ci
 
-
       - name: Run Unit Tests with Coverage
         run: pnpm vitest run --coverage
 
       - name: Install Playwright Browsers
         run: pnpm exec playwright install --with-deps
+        
+     
+      - name: Push Database Schema
+        run: pnpm dlx drizzle-kit push
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         
       - name: Build App
         run: pnpm build
@@ -39,8 +44,6 @@ jobs:
           BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
           BETTER_AUTH_URL: ${{ secrets.BETTER_AUTH_URL }}
           NEXT_PUBLIC_APP_URL: ${{ secrets.NEXT_PUBLIC_APP_URL }}
-
-   
 
       - name: Run E2E Tests (Playwright)
         env:
