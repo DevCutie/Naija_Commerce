@@ -32,7 +32,7 @@ jobs:
         
      
       - name: Push Database Schema
-        run: pnpm dlx drizzle-kit push
+        run: pnpm exec drizzle-kit push
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         
