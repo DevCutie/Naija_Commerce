@@ -18,8 +18,8 @@ test.describe('Checkout Flow', () => {
 				throw new Error(
 					'❌ CRITICAL FAILURE: No products rendered on the screen! The database seed in auth.setup.ts is failing silently.',
 				);
-			});
-
+			}); 
+			
 		await productButton.click();
 
 		await page.locator('header button').last().click();
