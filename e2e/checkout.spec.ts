@@ -7,16 +7,12 @@ test.describe('Checkout Flow', () => {
 		page,
 	}) => {
 		await page.goto('/');
-		await page
-			.getByRole('button', { name: /Add to Cart/i })
-			.first()
-			.click();
-		await page
-			.locator('header')
-			.getByRole('button')
-			.filter({ hasText: /cart/i })
-			.click();
-		await page.getByRole('link', { name: /Proceed to Checkout/i }).click();
+
+		await page.locator('main button').first().click();
+
+		await page.locator('header button').last().click();
+
+		await page.getByRole('link', { name: /Checkout/i }).click();
 
 		await expect(page).toHaveURL(/.*checkout/);
 		await expect(
