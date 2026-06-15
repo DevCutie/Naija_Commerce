@@ -6,8 +6,7 @@ test.describe('Checkout Flow', () => {
 	test('user can add item to cart and reach checkout summary', async ({
 		page,
 	}) => {
-
-    await page.goto('/products');
+		await page.goto('/products');
 
 		const productButton = page
 			.locator('div[class*="rounded-lg"] button')
