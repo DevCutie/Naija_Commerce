@@ -8,18 +8,22 @@ test.describe('Checkout Flow', () => {
 	}) => {
 		await page.goto('/');
 
-		await page.waitForSelector('main');
+		const productButton = page
+			.locator('div[class*="rounded-lg"] button')
+			.first();
 
-		await page
-			.locator('main')
-			.locator('button, [role="button"]')
-			.first()
-			.click();
-		await page
-			.locator('header')
-			.locator('button, [role="button"]')
-			.last()
-			.click();
+		await expect(productButton)
+			.toBeVisible({ timeout: 10000 })
+			.catch(async () => {
+				throw new Error(
+					'❌ CRITICAL FAILURE: No products rendered on the screen! The database seed in auth.setup.ts is failing silently.',
+				);
+			});
+
+		await productButton.click();
+
+		await page.locator('header button').last().click();
+
 		await page.getByRole('link', { name: /Checkout/i }).click();
 
 		await expect(page).toHaveURL(/.*checkout/);
