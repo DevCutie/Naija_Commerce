@@ -4,7 +4,7 @@ on: [push, pull_request]
 jobs:
   test:
     runs-on: ubuntu-latest
-    
+
     # THE FIX: Spin up an isolated, temporary Postgres database just for this CI run
     services:
       postgres:
@@ -24,21 +24,21 @@ jobs:
     # Override the database URL to point to the temporary container instead of your secret
     env:
       DATABASE_URL: postgresql://postgres:password@localhost:5432/testdb
-      
+
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Install pnpm
         uses: pnpm/action-setup@v3
         with:
           version: 10
-          
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'pnpm'
-          
+          cache: "pnpm"
+
       - name: Install dependencies
         run: pnpm install --no-frozen-lockfile
 
@@ -50,11 +50,25 @@ jobs:
 
       - name: Install Playwright Browsers
         run: pnpm exec playwright install --with-deps
-        
-      # Drizzle will now push instantly because the temporary DB is 100% empty
+
       - name: Push Database Schema
         run: pnpm exec drizzle-kit push
-        
+
+      - name: Seed Database Before Build
+        run: |
+          cat << 'EOF' > seed-ci.ts
+          import { db } from "./lib/db";
+          import { products, categories } from "./lib/db/schema";
+          async function seed() {
+            await db.insert(categories).values({ id: "test-cat", name: "Playwright Category", slug: "playwright-category" }).onConflictDoNothing();
+            await db.insert(products).values({ id: "test-prod", name: "Playwright Product", slug: "playwright-product", description: "Test product", priceKobo: 50000, category_id: "test-cat" }).onConflictDoNothing();
+            console.log("Database seeded successfully!");
+            process.exit(0);
+          }
+          seed();
+          EOF
+          npx -y tsx seed-ci.ts
+
       - name: Build App
         run: pnpm build
         env:
