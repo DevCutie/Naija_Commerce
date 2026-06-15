@@ -6,11 +6,21 @@ test.describe('Checkout Flow', () => {
 	test('user can add item to cart and reach checkout summary', async ({
 		page,
 	}) => {
-		await page.goto(`/?nocache=${Date.now()}`);
+		await page.goto('/products');
 
-		await page.locator('main button').first().click();
+		await page.waitForSelector('main');
 
-		await page.locator('header button').last().click();
+		await page
+			.locator('main')
+			.locator('button, [role="button"]')
+			.first()
+			.click();
+
+		await page
+			.locator('header')
+			.locator('button, [role="button"]')
+			.last()
+			.click();
 
 		await page.getByRole('link', { name: /Checkout/i }).click();
 
