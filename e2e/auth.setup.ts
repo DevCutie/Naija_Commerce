@@ -26,9 +26,7 @@ setup('authenticate and seed', async ({ request, context }) => {
 				category_id: 'test-cat',
 			})
 			.onConflictDoNothing();
-	} catch (error) {
-		console.log('Seed ignored (Safe to ignore locally):', error);
-	}
+	} catch (error) {}
 
 	const credentials = {
 		email: 'test@example.com',
