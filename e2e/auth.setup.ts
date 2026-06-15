@@ -26,7 +26,7 @@ setup('authenticate and seed', async ({ request, context }) => {
 				category_id: 'test-cat',
 			})
 			.onConflictDoNothing();
-	} catch (error) {}
+	} catch (_error) {}
 
 	const credentials = {
 		email: 'test@example.com',
