@@ -6,7 +6,7 @@ test.describe('Checkout Flow', () => {
 	test('user can add item to cart and reach checkout summary', async ({
 		page,
 	}) => {
-		await page.goto('/products');
+		await page.goto('/');
 
 		const productTitle = page.getByText('Playwright Product');
 
@@ -18,6 +18,7 @@ test.describe('Checkout Flow', () => {
 					"❌ CRITICAL FAILURE: Product missing! Playwright saved a screenshot to 'playwright-debug.png' so you can see the UI.",
 				);
 			});
+
 		const productCard = page
 			.locator('div')
 			.filter({ hasText: 'Playwright Product' })
