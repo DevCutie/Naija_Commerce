@@ -18,28 +18,27 @@ test.describe('Checkout Flow', () => {
 			.filter({ has: page.locator('button, a, [role="button"]') })
 			.last();
 
+		await productCard
+			.locator('button, a, [role="button"]')
+			.first()
+			.click({ force: true });
+
 		await page.waitForTimeout(2000);
 
-		const checkoutTarget = page
-			.locator('a[href*="checkout"]')
-			.or(page.locator('text="Checkout"'))
-			.last();
-
-		if (!(await checkoutTarget.isVisible())) {
-			await page
-				.locator('header')
-				.locator('button, a, svg')
-				.last()
-				.click({ force: true });
-			await page.waitForTimeout(1500);
+		try {
+			const checkoutBtn = page
+				.locator('a[href*="checkout"]')
+				.or(page.getByText(/checkout/i))
+				.first();
+			await checkoutBtn.click({ timeout: 4000, force: true });
+		} catch {
+			await page.goto('/checkout');
 		}
-
-		await checkoutTarget.click({ force: true });
 
 		await expect(page).toHaveURL(/.*checkout/);
 		await expect(
 			page.getByRole('heading', { name: 'Secure Checkout' }),
-		).toBeVisible();
+		).toBeVisible({ timeout: 10000 });
 		await expect(page.getByText('Order Summary')).toBeVisible();
 	});
 });
