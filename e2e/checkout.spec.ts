@@ -8,21 +8,27 @@ test.describe('Checkout Flow', () => {
 	}) => {
 		await page.goto('/products');
 
-		const productButton = page
-			.locator('div[class*="rounded-lg"] button')
-			.first();
+		const productTitle = page.getByText('Playwright Product');
 
-		await expect(productButton)
+		await expect(productTitle)
 			.toBeVisible({ timeout: 10000 })
 			.catch(async () => {
+				await page.screenshot({ path: 'playwright-debug.png', fullPage: true });
 				throw new Error(
-					'❌ CRITICAL FAILURE: No products rendered on the screen! The database seed in auth.setup.ts is failing silently.',
+					"❌ CRITICAL FAILURE: Product missing! Playwright saved a screenshot to 'playwright-debug.png' so you can see the UI.",
 				);
 			});
+		const productCard = page
+			.locator('div')
+			.filter({ hasText: 'Playwright Product' })
+			.last();
+		await productCard.locator('button, [role="button"]').first().click();
 
-		await productButton.click();
-
-		await page.locator('header button').last().click();
+		await page
+			.locator('header')
+			.locator('button, [role="button"]')
+			.last()
+			.click();
 
 		await page.getByRole('link', { name: /Checkout/i }).click();
 
