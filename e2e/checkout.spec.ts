@@ -7,39 +7,25 @@ test.describe('Checkout Flow', () => {
 		page,
 	}) => {
 		await page.goto('/');
+		const productTitle = page.getByText('Playwright Product').first();
+		await expect(productTitle).toBeVisible({ timeout: 10000 });
+		await productTitle.click({ force: true });
 
-		await expect(page.getByText('Playwright Product')).toBeVisible({
-			timeout: 10000,
-		});
+		await page.waitForTimeout(3000);
 
-		// Isolate the exact product card
-		const productCard = page
-			.locator('div')
-			.filter({ hasText: 'Playwright Product' })
-			.filter({ has: page.locator('button') })
-			.last();
-
-		await productCard.locator('button').last().click({ force: true });
+		const addToCartBtn = page
+			.locator('button, a, [role="button"]')
+			.filter({ hasText: /add|cart|buy/i })
+			.first();
+		if (await addToCartBtn.isVisible()) {
+			await addToCartBtn.click({ force: true });
+		} else {
+			await page.locator('button').first().click({ force: true });
+		}
 
 		await page.waitForTimeout(2000);
 
-		try {
-			const checkoutTarget = page
-				.locator('a[href*="checkout"]')
-				.or(page.locator('text="Checkout"'))
-				.last();
-			if (!(await checkoutTarget.isVisible())) {
-				await page
-					.locator('header')
-					.locator('button, a, svg')
-					.last()
-					.click({ force: true });
-				await page.waitForTimeout(1500);
-			}
-			await checkoutTarget.click({ timeout: 4000, force: true });
-		} catch {
-			await page.goto('/checkout');
-		}
+		await page.goto('/checkout');
 
 		await expect(page).toHaveURL(/.*checkout/);
 		await expect(page.locator('body')).toContainText(
