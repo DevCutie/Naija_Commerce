@@ -9,18 +9,13 @@ test.describe('Checkout Flow', () => {
 		await page.goto('/');
 		await page.waitForLoadState('networkidle');
 
-		await page.getByText('Playwright Product').first().click({ force: true });
+		await page.getByText('Playwright Product').first().click();
 		await page.waitForLoadState('networkidle');
 
-		const addToCartTarget = page
-			.locator('button, a, [role="button"]')
-			.filter({
-				hasText: /add|cart|buy/i,
-			})
-			.first();
+		const addToCartBtn = page.locator('.YOUR_BUTTON_CLASS').first();
 
-		await expect(addToCartTarget).toBeVisible({ timeout: 10000 });
-		await addToCartTarget.click({ force: true });
+		await expect(addToCartBtn).toBeVisible({ timeout: 10000 });
+		await addToCartBtn.click({ force: true });
 
 		await page.waitForTimeout(3000);
 
