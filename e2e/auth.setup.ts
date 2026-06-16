@@ -20,7 +20,7 @@ setup('authenticate and seed', async ({ request, context }) => {
 			id: 'test-prod',
 			name: 'Playwright Product',
 			slug: 'playwright-product',
-			description: 'Test product for E2E',
+			description: 'Test product',
 			priceKobo: 50000,
 			category_id: 'test-cat',
 		})
@@ -36,17 +36,28 @@ setup('authenticate and seed', async ({ request, context }) => {
 	});
 
 	if (!response.ok()) {
-		response = await request.post('/api/auth/sign-up/email', {
+		const signUpResponse = await request.post('/api/auth/sign-up/email', {
 			data: {
 				...credentials,
 				name: 'Playwright Test User',
 			},
 		});
 
+		if (!signUpResponse.ok()) {
+			const errorText = await signUpResponse.text();
+			throw new Error(
+				`Sign-up failed: ${signUpResponse.status()} - ${errorText}`,
+			);
+		}
+
+		response = await request.post('/api/auth/sign-in/email', {
+			data: credentials,
+		});
+
 		if (!response.ok()) {
 			const errorText = await response.text();
 			throw new Error(
-				`Authentication failed: ${response.status()} - ${errorText}`,
+				`Sign-in after sign-up failed: ${response.status()} - ${errorText}`,
 			);
 		}
 	}
