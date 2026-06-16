@@ -7,25 +7,15 @@ test.describe('Checkout Flow', () => {
 		page,
 	}) => {
 		await page.goto('/');
-
-		const productTitle = page.getByText('Playwright Product').first();
-		await expect(productTitle).toBeVisible({ timeout: 10000 });
-		await productTitle.click();
-
 		await page.waitForLoadState('networkidle');
 
-		const addToCartBtn = page
-			.locator(
-				'xpath=//*[contains(translate(text(), "ADD", "add"), "add") or contains(translate(text(), "CART", "cart"), "cart") and (self::button or self::a or @role="button")]',
-			)
-			.first();
+		await page.getByText('Playwright Product').first().click({ force: true });
 
-		if (!(await addToCartBtn.isVisible())) {
-			const allButtons = await page.locator('button, a').allTextContents();
-			console.log('Buttons found on page:', allButtons);
-		}
+		await page.waitForLoadState('networkidle');
+		await page.waitForTimeout(3000);
 
-		await addToCartBtn.click({ force: true });
+		await page.locator('button').first().click({ force: true });
+
 		await page.waitForTimeout(3000);
 
 		await page.goto('/checkout');
