@@ -20,13 +20,21 @@ test.describe('Checkout Flow', () => {
 
 		await productCard.locator('button, a, [role="button"]').first().click();
 
-		await page
-			.locator('header')
-			.locator('button, a, [role="button"]')
-			.last()
-			.click();
+		const checkoutTarget = page
+			.getByRole('link', { name: /Checkout/i })
+			.or(page.getByRole('button', { name: /Checkout/i }));
 
-		await page.getByRole('link', { name: /Checkout/i }).click();
+		await expect(checkoutTarget)
+			.toBeVisible({ timeout: 5000 })
+			.catch(async () => {
+				await page
+					.locator('header')
+					.locator('button, a, [role="button"]')
+					.last()
+					.click();
+			});
+
+		await checkoutTarget.click();
 
 		await expect(page).toHaveURL(/.*checkout/);
 		await expect(
