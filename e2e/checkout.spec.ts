@@ -6,17 +6,20 @@ test.describe('Checkout Flow', () => {
 	test('user can add item to cart and reach checkout summary', async ({
 		page,
 	}) => {
-		await page.goto('/');
+		// 1. Maintain mentor's exact route requirement
+		await page.goto('/products');
 
-		const productTitle = page.getByText('Playwright Product');
-		await expect(productTitle).toBeVisible({ timeout: 10000 });
+		await expect(page.getByText('Playwright Product')).toBeVisible({
+			timeout: 10000,
+		});
 
-		await productTitle
-			.locator(
-				'xpath=following::button | following::a | following::*[@role="button"]',
-			)
-			.first()
-			.click();
+		const productCard = page
+			.locator('div')
+			.filter({ hasText: 'Playwright Product' })
+			.filter({ has: page.locator('button, a, [role="button"]') })
+			.last();
+
+		await productCard.locator('button, a, [role="button"]').first().click();
 
 		await page
 			.locator('header')
