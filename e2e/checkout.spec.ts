@@ -7,11 +7,14 @@ test.describe('Checkout Flow', () => {
 		page,
 	}) => {
 		await page.goto('/');
+		await page.waitForLoadState('networkidle');
+
 		const productTitle = page.getByText('Playwright Product').first();
 		await expect(productTitle).toBeVisible({ timeout: 10000 });
 		await productTitle.click({ force: true });
 
-		await page.waitForTimeout(3000);
+		await page.waitForLoadState('networkidle');
+		await page.waitForTimeout(2000);
 
 		const addToCartBtn = page
 			.locator('button, a, [role="button"]')
@@ -23,9 +26,10 @@ test.describe('Checkout Flow', () => {
 			await page.locator('button').first().click({ force: true });
 		}
 
-		await page.waitForTimeout(2000);
+		await page.waitForTimeout(3000);
 
 		await page.goto('/checkout');
+		await page.waitForLoadState('networkidle');
 
 		await expect(page).toHaveURL(/.*checkout/);
 		await expect(page.locator('body')).toContainText(
