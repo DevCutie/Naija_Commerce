@@ -12,16 +12,15 @@ test.describe('Checkout Flow', () => {
 			timeout: 10000,
 		});
 
+		// Isolate the exact product card
 		const productCard = page
 			.locator('div')
 			.filter({ hasText: 'Playwright Product' })
-			.filter({ has: page.locator('button, a, [role="button"]') })
+			.filter({ has: page.locator('button') })
 			.last();
 
-		await productCard
-			.locator('button, a, [role="button"]')
-			.first()
-			.click({ force: true });
+		await productCard.locator('button').last().click({ force: true });
+
 		await page.waitForTimeout(2000);
 
 		try {
@@ -43,7 +42,6 @@ test.describe('Checkout Flow', () => {
 		}
 
 		await expect(page).toHaveURL(/.*checkout/);
-
 		await expect(page.locator('body')).toContainText(
 			/checkout|summary|order|total/i,
 			{ timeout: 10000 },
