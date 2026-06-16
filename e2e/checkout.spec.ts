@@ -9,25 +9,18 @@ test.describe('Checkout Flow', () => {
 		await page.goto('/');
 
 		const productTitle = page.getByText('Playwright Product');
+		await expect(productTitle).toBeVisible({ timeout: 10000 });
 
-		await expect(productTitle)
-			.toBeVisible({ timeout: 10000 })
-			.catch(async () => {
-				await page.screenshot({ path: 'playwright-debug.png', fullPage: true });
-				throw new Error(
-					"❌ CRITICAL FAILURE: Product missing! Playwright saved a screenshot to 'playwright-debug.png' so you can see the UI.",
-				);
-			});
-
-		const productCard = page
-			.locator('div')
-			.filter({ hasText: 'Playwright Product' })
-			.last();
-		await productCard.locator('button, [role="button"]').first().click();
+		await productTitle
+			.locator(
+				'xpath=following::button | following::a | following::*[@role="button"]',
+			)
+			.first()
+			.click();
 
 		await page
 			.locator('header')
-			.locator('button, [role="button"]')
+			.locator('button, a, [role="button"]')
 			.last()
 			.click();
 
