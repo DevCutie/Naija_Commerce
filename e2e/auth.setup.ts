@@ -4,7 +4,7 @@ import { categories, products } from '../lib/db/schema';
 
 const authFile = 'playwright/.auth/user.json';
 
-setup('authenticate and seed', async ({ request, context }) => {
+setup('authenticate and seed', async ({ request }) => {
 	await db
 		.insert(categories)
 		.values({
@@ -62,5 +62,5 @@ setup('authenticate and seed', async ({ request, context }) => {
 		}
 	}
 
-	await context.storageState({ path: authFile });
+	await request.storageState({ path: authFile });
 });
