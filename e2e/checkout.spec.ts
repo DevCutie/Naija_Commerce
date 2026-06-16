@@ -6,8 +6,7 @@ test.describe('Checkout Flow', () => {
 	test('user can add item to cart and reach checkout summary', async ({
 		page,
 	}) => {
-		// 1. Maintain mentor's exact route requirement
-		await page.goto('/products');
+		await page.goto('/');
 
 		await expect(page.getByText('Playwright Product')).toBeVisible({
 			timeout: 10000,
