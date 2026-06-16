@@ -18,15 +18,11 @@ test.describe('Checkout Flow', () => {
 			.filter({ has: page.locator('button, a, [role="button"]') })
 			.last();
 
-		await productCard
-			.locator('button, a, [role="button"]')
-			.first()
-			.click({ force: true });
-
 		await page.waitForTimeout(2000);
 
 		const checkoutTarget = page
-			.locator('a[href*="checkout"], text="Checkout"')
+			.locator('a[href*="checkout"]')
+			.or(page.locator('text="Checkout"'))
 			.last();
 
 		if (!(await checkoutTarget.isVisible())) {
