@@ -7,20 +7,22 @@ test.describe('Checkout Flow', () => {
 		page,
 	}) => {
 		await page.goto('/');
-		await page.waitForLoadState('networkidle');
 
-		await page.getByText('Playwright Product').first().click({ force: true });
+		const productTitle = page.getByText('Playwright Product').first();
+		await expect(productTitle).toBeVisible({ timeout: 10000 });
+		await productTitle.click();
 
 		await page.waitForLoadState('networkidle');
-		await page.waitForTimeout(2000);
 
 		const addToCartBtn = page
-			.getByText(/add to cart|add to bag/i)
-			.first()
-			.or(page.locator('main button').first());
-		await addToCartBtn.click({ force: true });
+			.locator('button')
+			.filter({ hasText: /add to cart|add to bag/i })
+			.first();
 
-		await page.waitForTimeout(3000);
+		await expect(addToCartBtn).toBeEnabled({ timeout: 10000 });
+		await addToCartBtn.click();
+
+		await page.waitForTimeout(2000);
 
 		await page.goto('/checkout');
 		await page.waitForLoadState('networkidle');
