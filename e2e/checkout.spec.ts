@@ -6,16 +6,13 @@ test.describe('Checkout Flow', () => {
 	test('user can add item to cart and reach checkout summary', async ({
 		page,
 	}) => {
-		// 1. Initial navigation and hydration wait
 		await page.goto('/');
 		await page.waitForLoadState('networkidle');
 
 		await page.getByText('Playwright Product').first().click({ force: true });
 		await page.waitForLoadState('networkidle');
 
-		const addToCartBtn = page
-			.locator('button:has-text("Add"), button:has-text("Cart")')
-			.first();
+		const addToCartBtn = page.locator('main button').first();
 		await expect(addToCartBtn).toBeVisible({ timeout: 10000 });
 		await addToCartBtn.click({ force: true });
 
