@@ -59,6 +59,7 @@ export default function AddToCartButton({
 			size="lg"
 			className="w-full"
 			disabled={isPending}
+			data-testid="add-to-cart"
 		>
 			{isPending ? (
 				<Loader2 className="mr-2 h-4 w-4 animate-spin" />

@@ -15,16 +15,18 @@ export default function CartIcon() {
 		setIsMounted(true);
 	}, []);
 
-	if (!isMounted) {
-		return (
-			<div className="relative p-2">
-				<ShoppingCart className="h-6 w-6 text-muted-foreground" />
-			</div>
-		);
-	}
+if (!isMounted) {
+    return (
+      <div className="relative p-2" data-testid="cart-icon"> 
+        <ShoppingCart className="h-6 w-6 text-muted-foreground" />
+      </div>
+    );
+  }
 
 	return (
-		<div className="relative p-2 cursor-pointer group">
+		<div className="relative p-2 cursor-pointer group"
+		data-testid="cart-icon"
+		>
 			<ShoppingCart className="h-6 w-6 text-muted-foreground group-hover:text-foreground transition-colors" />
 
 			{itemCount > 0 && (

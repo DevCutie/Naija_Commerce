@@ -10,7 +10,7 @@ export async function syncCartItemToDB(
 	quantity: number,
 ) {
 	try {
-		// 1. Find or create the user's cart
+
 		let [userCart] = await db
 			.select()
 			.from(carts)
