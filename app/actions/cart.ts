@@ -10,7 +10,6 @@ export async function syncCartItemToDB(
 	quantity: number,
 ) {
 	try {
-
 		let [userCart] = await db
 			.select()
 			.from(carts)

@@ -1,19 +1,25 @@
-import { test as setup } from '@playwright/test';
+import { test as setup, expect } from '@playwright/test';
 
-setup('authenticate and seed', async ({ page }) => {
-	// 1. Visit the site so we have a domain context
-	await page.goto('/');
+setup('authenticate', async ({ request }) => {
 
-	// 2. Direct session injection: Create the session cookie manually
-	// Replace 'better_auth_session' with your exact session cookie name
-	await page.context().addCookies([
-		{
-			name: 'better_auth_session',
-			value: 'test-session-token', // Your mock session token
-			domain: 'localhost',
-			path: '/',
-		},
-	]);
+  await request.post('/api/auth/sign-up/email', {
+    data: {
+      email: 'test@example.com',
+      password: 'password123',
+      name: 'Test User',
+    },
+  }).catch(() => {
 
-	await page.context().storageState({ path: 'playwright/.auth/user.json' });
+  });
+
+  const response = await request.post('/api/auth/sign-in/email', {
+    data: {
+      email: 'test@example.com',
+      password: 'password123',
+    },
+  });
+
+  expect(response.ok()).toBeTruthy();
+
+  await request.storageState({ path: 'playwright/.auth/user.json' });
 });

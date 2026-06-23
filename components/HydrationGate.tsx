@@ -3,9 +3,9 @@
 import { useEffect } from 'react';
 
 export default function HydrationGate() {
-  useEffect(() => {
-    document.body.dataset.hydrated = "true";
-  }, []);
+	useEffect(() => {
+		document.body.dataset.hydrated = 'true';
+	}, []);
 
-  return null; 
+	return null;
 }

@@ -6,9 +6,7 @@ import { CartMerger } from '@/components/CartMerger';
 import { QueryProvider } from '@/components/providers/query-provider';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/sonner';
-import  HydrationGate  from "@/components/HydrationGate";
-
-
+import HydrationGate from '@/components/HydrationGate';
 
 export const metadata: Metadata = {
 	title: 'Naija Commerce',
@@ -16,16 +14,11 @@ export const metadata: Metadata = {
 		'A high-performance e-commerce platform for the Nigerian market.',
 };
 
-
-
 export default function RootLayout({
 	children,
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
-
-
-
 	return (
 		<html lang="en" className="h-full antialiased" suppressHydrationWarning>
 			<body className="min-h-full flex flex-col" suppressHydrationWarning>

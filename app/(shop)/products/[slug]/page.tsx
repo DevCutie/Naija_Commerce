@@ -5,30 +5,52 @@ import AddToCartButton from '@/components/AddToCartButton';
 import RecentlyViewed from '@/components/RecentlyViewed';
 import { db } from '@/lib/db';
 import { products, variants } from '@/lib/db/schema';
-import RelatedProducts from '../../RelatedProducts';
-import RelatedProductsSkeleton from '../../RelatedProductsSkeleton';
+import RelatedProducts from '@/app/(shop)/RelatedProducts';
+import RelatedProductsSkeleton from '@/app/(shop)/RelatedProductsSkeleton';
 
 export const dynamic = 'force-dynamic';
 
-export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
+
+type Product = {
+	id: string;  
+	name: string;
+	priceKobo: number;
+	description: string;
+	category_id: string;
+};
+
+type Variant = {
+	id: string;
+};
+export default async function ProductPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   const resolvedParams = await params;
   const productSlug = resolvedParams.slug;
 
-  let product;
-  let variant;
 
-  if (process.env.NODE_ENV === 'test') {
+  const fetchedProduct = await db.query.products.findFirst({
+    where: eq(products.slug, productSlug),
+  });
 
-    product = { id: "test-id", name: "Playwright Product", priceKobo: 1000, description: "Test description", category_id: "cat-1" };
-    variant = { id: "test-variant-id" };
-  } else {
+  if (!fetchedProduct) notFound();
+  
+  const product = fetchedProduct as Product;
 
-    product = await db.query.products.findFirst({ where: eq(products.slug, productSlug) });
-    if (!product) notFound();
-    
-    variant = await db.query.variants.findFirst({ where: eq(variants.productId, product.id) });
-    if (!variant) return <div>Product is currently out of stock (no variant found).</div>;
+  const fetchedVariant = await db.query.variants.findFirst({
+    where: eq(variants.productId, product.id),
+  });
+
+  if (!fetchedVariant) {
+    return <div>Product is currently out of stock (no variant found).</div>;
   }
+  
+  const variant = fetchedVariant;
+
+
+
 	return (
 		<div className="container mx-auto py-10 px-4" data-testid="product-card">
 			<div className="grid grid-cols-1 md:grid-cols-2 gap-10">

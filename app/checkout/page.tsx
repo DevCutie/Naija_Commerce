@@ -53,17 +53,6 @@ export default function CheckoutPage() {
 		);
 	}
 
-// Inside app/checkout/page.tsx
-if (process.env.NODE_ENV === 'test') {
-  // Return the page without any DB logic if we are in test mode
-  return (
-    <div className="max-w-4xl mx-auto p-6 mt-8">
-      <h1 className="text-3xl font-bold mb-8">Secure Checkout</h1>
-      <h2 className="text-xl font-semibold">Order Summary</h2>
-      {/* Static mock content so Playwright can find the heading */}
-    </div>
-  );
-}
 
 
 	return (
