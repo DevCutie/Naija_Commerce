@@ -20,6 +20,7 @@ jobs:
           --health-timeout 5s
           --health-retries 5
 
+
     env:
       DATABASE_URL: postgresql://postgres:password@localhost:5432/testdb
 
@@ -70,15 +71,19 @@ jobs:
       - name: Build App
         run: pnpm build
         env:
-          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+   
           BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           BETTER_AUTH_URL: http://localhost:3001
           NEXT_PUBLIC_APP_URL: http://localhost:3001
 
+
       - name: Run E2E Tests (Playwright)
-        run: npx playwright test
+        run: pnpm exec playwright test
         env:
-          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
           BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           BETTER_AUTH_URL: http://localhost:3001
           NEXT_PUBLIC_APP_URL: http://localhost:3001
