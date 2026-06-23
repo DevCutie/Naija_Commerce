@@ -20,7 +20,6 @@ jobs:
           --health-timeout 5s
           --health-retries 5
 
-
     env:
       DATABASE_URL: postgresql://postgres:password@localhost:5432/testdb
 
@@ -57,10 +56,14 @@ jobs:
         run: |
           cat << 'EOF' > seed-ci.ts
           import { db } from "./lib/db";
-          import { products, categories } from "./lib/db/schema";
+          import { products, categories, variants } from "./lib/db/schema";
           async function seed() {
             await db.insert(categories).values({ id: "test-cat", name: "Playwright Category", slug: "playwright-category" }).onConflictDoNothing();
             await db.insert(products).values({ id: "test-prod", name: "Playwright Product", slug: "playwright-product", description: "Test product", priceKobo: 50000, category_id: "test-cat" }).onConflictDoNothing();
+            
+            // Inserted variant to ensure the Add to Cart button renders
+            await db.insert(variants).values({ id: "test-var", productId: "test-prod" }).onConflictDoNothing();
+            
             console.log("Database seeded successfully!");
             process.exit(0);
           }
@@ -71,13 +74,11 @@ jobs:
       - name: Build App
         run: pnpm build
         env:
-   
           BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           BETTER_AUTH_URL: http://localhost:3001
           NEXT_PUBLIC_APP_URL: http://localhost:3001
-
 
       - name: Run E2E Tests (Playwright)
         run: pnpm exec playwright test
