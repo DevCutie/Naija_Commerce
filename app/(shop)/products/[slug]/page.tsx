@@ -2,7 +2,6 @@ import { eq } from 'drizzle-orm';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 
-
 import RelatedProducts from '@/app/(shop)/RelatedProducts';
 import RelatedProductsSkeleton from '@/app/(shop)/RelatedProductsSkeleton';
 import AddToCartButton from '@/components/AddToCartButton';
