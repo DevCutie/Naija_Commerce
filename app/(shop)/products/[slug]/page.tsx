@@ -1,55 +1,49 @@
 import { eq } from 'drizzle-orm';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
+
+import RelatedProducts from '@/app/(shop)/RelatedProducts';
+import RelatedProductsSkeleton from '@/app/(shop)/RelatedProductsSkeleton';
 import AddToCartButton from '@/components/AddToCartButton';
 import RecentlyViewed from '@/components/RecentlyViewed';
 import { db } from '@/lib/db';
 import { products, variants } from '@/lib/db/schema';
-import RelatedProducts from '@/app/(shop)/RelatedProducts';
-import RelatedProductsSkeleton from '@/app/(shop)/RelatedProductsSkeleton';
 
 export const dynamic = 'force-dynamic';
 
-
 type Product = {
-	id: string;  
+	id: string;
 	name: string;
 	priceKobo: number;
 	description: string;
 	category_id: string;
 };
 
-type Variant = {
-	id: string;
-};
 export default async function ProductPage({
-  params,
+	params,
 }: {
-  params: Promise<{ slug: string }>;
+	params: Promise<{ slug: string }>;
 }) {
-  const resolvedParams = await params;
-  const productSlug = resolvedParams.slug;
+	const resolvedParams = await params;
+	const productSlug = resolvedParams.slug;
 
+	const fetchedProduct = await db.query.products.findFirst({
+		where: eq(products.slug, productSlug),
+	});
 
-  const fetchedProduct = await db.query.products.findFirst({
-    where: eq(products.slug, productSlug),
-  });
+	if (!fetchedProduct) notFound();
 
-  if (!fetchedProduct) notFound();
-  
-  const product = fetchedProduct as Product;
+	const product = fetchedProduct as Product;
 
-  const fetchedVariant = await db.query.variants.findFirst({
-    where: eq(variants.productId, product.id),
-  });
+	const fetchedVariant = await db.query.variants.findFirst({
+		where: eq(variants.productId, product.id),
+	});
 
-  if (!fetchedVariant) {
-    return <div>Product is currently out of stock (no variant found).</div>;
-  }
-  
-  const variant = fetchedVariant;
+	if (!fetchedVariant) {
+		return <div>Product is currently out of stock (no variant found).</div>;
+	}
 
-
+	const variant = fetchedVariant;
 
 	return (
 		<div className="container mx-auto py-10 px-4" data-testid="product-card">

@@ -3,10 +3,10 @@ import Link from 'next/link';
 import CartDrawer from '@/components/CartDrawer';
 import './globals.css';
 import { CartMerger } from '@/components/CartMerger';
+import HydrationGate from '@/components/HydrationGate';
 import { QueryProvider } from '@/components/providers/query-provider';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/sonner';
-import HydrationGate from '@/components/HydrationGate';
 
 export const metadata: Metadata = {
 	title: 'Naija Commerce',

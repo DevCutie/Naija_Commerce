@@ -13,7 +13,6 @@ export async function middleware(request: NextRequest) {
 	const isAdminRoute =
 		path.startsWith('/admin') || path.startsWith('/dashboard');
 
-
 	if (!isProtectedRoute && !isAdminRoute) {
 		return NextResponse.next();
 	}
