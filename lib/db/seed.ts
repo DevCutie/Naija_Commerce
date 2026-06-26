@@ -1,14 +1,12 @@
-import path from 'node:path';
-import { config } from 'dotenv';
 import { categories, inventory, products, variants } from '@/lib/db/schema';
-
-config({ path: path.resolve(process.cwd(), '.env.local') });
 
 async function seed() {
 	console.log('🔍 Checking Environment Variables...');
 
 	if (!process.env.DATABASE_URL) {
-		throw new Error('❌ DATABASE_URL is missing! Ensure .env.local exists.');
+		throw new Error(
+			'❌ DATABASE_URL is missing! Ensure your environment file is loaded.',
+		);
 	}
 
 	console.log('✅ DATABASE_URL found!');
@@ -19,6 +17,8 @@ async function seed() {
 
 	try {
 		console.log('🧹 Clearing old inventory...');
+		// Note: If you add an 'orders' or 'cart_items' table later,
+		// you must delete from those tables BEFORE deleting these.
 		await db.delete(inventory);
 		await db.delete(variants);
 		await db.delete(products);

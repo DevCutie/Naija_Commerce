@@ -61,8 +61,8 @@ jobs:
             await db.insert(categories).values({ id: "test-cat", name: "Playwright Category", slug: "playwright-category" }).onConflictDoNothing();
             await db.insert(products).values({ id: "test-prod", name: "Playwright Product", slug: "playwright-product", description: "Test product", priceKobo: 50000, category_id: "test-cat" }).onConflictDoNothing();
             
-            // Added name field to satisfy the NOT NULL constraint
-            await db.insert(variants).values({ id: "test-var", productId: "test-prod", name: "Default Variant" }).onConflictDoNothing();
+            // Added name and sku fields to satisfy the NOT NULL constraints
+            await db.insert(variants).values({ id: "test-var", productId: "test-prod", name: "Default Variant", sku: "TEST-SKU-001" }).onConflictDoNothing();
             
             console.log("Database seeded successfully!");
             process.exit(0);
