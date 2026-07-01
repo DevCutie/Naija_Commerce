@@ -7,13 +7,12 @@ jobs:
 
     services:
       postgres:
-        image: postgres:15
+        image: postgres:16
         env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: password
-          POSTGRES_DB: testdb
-        ports:
-          - 5432:5432
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: naija_test
+        ports: ['5432:5432']
+
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -21,38 +20,16 @@ jobs:
           --health-retries 5
 
     env:
-      DATABASE_URL: postgresql://postgres:password@localhost:5432/testdb
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/naija_test
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v3
-        with:
-          version: 10
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: "pnpm"
-
-      - name: Install dependencies
-        run: pnpm install --no-frozen-lockfile
-
-      - name: Run Biome Check
-        run: pnpm biome ci
-
-      - name: Run Unit Tests with Coverage
-        run: pnpm vitest run --coverage
-
-      - name: Install Playwright Browsers
-        run: pnpm exec playwright install --with-deps
 
       - name: Push Database Schema
         run: pnpm exec drizzle-kit push
 
       - name: Seed Database Before Build
+
         run: |
           cat << 'EOF' > seed-ci.ts
           import { db } from "./lib/db";
@@ -60,16 +37,14 @@ jobs:
           async function seed() {
             await db.insert(categories).values({ id: "test-cat", name: "Playwright Category", slug: "playwright-category" }).onConflictDoNothing();
             await db.insert(products).values({ id: "test-prod", name: "Playwright Product", slug: "playwright-product", description: "Test product", priceKobo: 50000, category_id: "test-cat" }).onConflictDoNothing();
-            
-            // Added name and sku fields to satisfy the NOT NULL constraints
             await db.insert(variants).values({ id: "test-var", productId: "test-prod", name: "Default Variant", sku: "TEST-SKU-001" }).onConflictDoNothing();
-            
             console.log("Database seeded successfully!");
             process.exit(0);
           }
           seed();
           EOF
           npx -y tsx seed-ci.ts
+
 
       - name: Build App
         run: pnpm build

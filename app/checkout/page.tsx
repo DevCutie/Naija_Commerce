@@ -7,7 +7,7 @@ import { useCartStore } from '@/store/use-cart-store';
 
 export default function CheckoutPage() {
 	const [isMounted, setIsMounted] = useState(false);
-	const { items } = useCartStore();
+	const items = useCartStore((state) => state.items);
 
 	useEffect(() => {
 		setIsMounted(true);
