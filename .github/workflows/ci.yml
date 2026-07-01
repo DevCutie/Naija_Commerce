@@ -12,7 +12,6 @@ jobs:
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: naija_test
         ports: ['5432:5432']
-
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -25,11 +24,28 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # 1. Install pnpm
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      # 2. Setup Node.js and cache pnpm dependencies
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      # 3. Install project dependencies
+      - name: Install dependencies
+        run: pnpm install
+
+      # 4. Push Database Schema (This will now work!)
       - name: Push Database Schema
         run: pnpm exec drizzle-kit push
 
       - name: Seed Database Before Build
-
         run: |
           cat << 'EOF' > seed-ci.ts
           import { db } from "./lib/db";
