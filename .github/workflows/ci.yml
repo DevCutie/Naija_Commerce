@@ -41,10 +41,15 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      # 4. Push Database Schema (This will now work!)
+      # 4. Install Playwright Browsers (CRITICAL FOR CI)
+      - name: Install Playwright Browsers
+        run: pnpm exec playwright install --with-deps
+
+      # 5. Push Database Schema
       - name: Push Database Schema
         run: pnpm exec drizzle-kit push
 
+      # 6. Seed Database Before Build
       - name: Seed Database Before Build
         run: |
           cat << 'EOF' > seed-ci.ts
@@ -61,7 +66,7 @@ jobs:
           EOF
           npx -y tsx seed-ci.ts
 
-
+      
       - name: Build App
         run: pnpm build
         env:
@@ -70,6 +75,7 @@ jobs:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           BETTER_AUTH_URL: http://localhost:3001
           NEXT_PUBLIC_APP_URL: http://localhost:3001
+
 
       - name: Run E2E Tests (Playwright)
         run: pnpm exec playwright test
