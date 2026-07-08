@@ -1,35 +1,45 @@
 import ProductGrid from '@/components/shop/ProductGrid';
 import { db } from '@/lib/db';
-import { getCategories } from '@/lib/db/queries';
+import { products, categories } from '@/lib/db/schema';
+import { eq } from 'drizzle-orm';
 
 export default async function ShopPage({
-	searchParams,
+  searchParams,
 }: {
-	searchParams: Promise<{ q?: string }>;
+  searchParams: Promise<{ q?: string }>;
 }) {
-	const start = performance.now();
-	const _categories = await getCategories();
-	const end = performance.now();
+  const params = await searchParams;
+  const searchQuery = params.q;
 
-	console.log(`⏱️ Category fetch took: ${(end - start).toFixed(2)}ms`);
+  let rows: any[] = [];
 
-	const params = await searchParams;
-	const searchQuery = params.q;
+  try {
+    // Perform the query
+    rows = await db
+      .select()
+      .from(products)
+      .leftJoin(categories, eq(products.categoryId, categories.id))
+      .limit(20);
+  } catch (err) {
+    // This will print the REAL error in your VS Code terminal
+    console.error('\n🔥 POSTGRES ERROR DETAILS:');
+    console.error(err);
+    console.error('\n');
+  }
 
-	const inventoryData = await db.query.products.findMany({
-		limit: 20,
-		with: {
-			category: true,
-		},
-	});
+  // Map the results to match what ProductGrid expects
+  const inventoryData = rows.map((row) => ({
+    ...row.products,
+    category: row.categories,
+  }));
 
-	return (
-		<div className="container mx-auto py-10 px-4">
-			<h1 className="text-4xl font-bold tracking-tight mb-8">
-				{searchQuery ? `Results for "${searchQuery}"` : 'Latest Arrivals'}
-			</h1>
+  return (
+    <div className="container mx-auto py-10 px-4">
+      <h1 className="text-4xl font-bold tracking-tight mb-8">
+        {searchQuery ? `Results for "${searchQuery}"` : 'Latest Arrivals'}
+      </h1>
 
-			<ProductGrid initialProducts={inventoryData} />
-		</div>
-	);
+      <ProductGrid initialProducts={inventoryData} />
+    </div>
+  );
 }

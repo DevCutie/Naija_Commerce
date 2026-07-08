@@ -1,24 +1,24 @@
 import { expect, test as setup } from '@playwright/test';
 
-setup('authenticate', async ({ request }) => {
-	await request
-		.post('/api/auth/sign-up/email', {
-			data: {
-				email: 'test@example.com',
-				password: 'password123',
-				name: 'Test User',
-			},
-		})
-		.catch(() => {});
+setup('authenticate', async ({ request, page }) => {
 
-	const response = await request.post('/api/auth/sign-in/email', {
-		data: {
-			email: 'test@example.com',
-			password: 'password123',
-		},
-	});
+  await request
+    .post('/api/auth/sign-up/email', {
+      data: {
+        email: 'test@example.com',
+        password: 'password123',
+        name: 'Test User',
+      },
+    })
+    .catch(() => {});
+  await page.goto('/login');
 
-	expect(response.ok()).toBeTruthy();
+  await page.getByTestId('email-input').fill('test@example.com');
+  await page.getByTestId('password-input').fill('password123');
 
-	await request.storageState({ path: 'playwright/.auth/user.json' });
+  await page.getByTestId('login-button').click();
+
+  await page.waitForURL('/checkout');
+
+  await page.context().storageState({ path: 'playwright/.auth/user.json' });
 });

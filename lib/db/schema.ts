@@ -16,15 +16,16 @@ export const categories = pgTable('categories', {
 });
 
 export const products = pgTable('products', {
-	id: text('id').primaryKey(),
-	name: text('name').notNull(),
-	slug: text('slug').notNull().unique(),
-	description: text('description'),
-	priceKobo: bigint('price_kobo', { mode: 'number' }).notNull(),
-	category_id: text('category_id')
-		.references(() => categories.id)
-		.notNull(),
-	createdAt: timestamp('created_at').defaultNow(),
+  id: text('id').primaryKey(),
+  name: text('name').notNull(),
+  slug: text('slug').notNull().unique(),
+  description: text('description'),
+  priceKobo: bigint('price_kobo', { mode: 'number' }).notNull(),
+  // FIX: Renamed category_id to categoryId for consistency
+  categoryId: text('category_id') 
+    .references(() => categories.id)
+    .notNull(),
+  createdAt: timestamp('created_at').defaultNow(),
 });
 
 export const variants = pgTable('variants', {
@@ -142,13 +143,12 @@ export const verifications = pgTable('verification', {
 export const categoriesRelations = relations(categories, ({ many }) => ({
 	products: many(products),
 }));
-
 export const productsRelations = relations(products, ({ many, one }) => ({
-	variants: many(variants),
-	category: one(categories, {
-		fields: [products.category_id],
-		references: [categories.id],
-	}),
+  variants: many(variants),
+  category: one(categories, {
+    fields: [products.categoryId], // FIX: Updated to match
+    references: [categories.id],
+  }),
 }));
 export const variantsRelations = relations(variants, ({ one }) => ({
 	product: one(products, {
@@ -192,5 +192,5 @@ export const orderItemsRelations = relations(orderItems, ({ one }) => ({
 }));
 
 export type ProductWithCategory = typeof products.$inferSelect & {
-	category: { id: string; name: string; slug: string } | null;
+  category: typeof categories.$inferSelect | null;
 };
