@@ -24,32 +24,26 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # 1. Install pnpm
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 9
 
-      # 2. Setup Node.js and cache pnpm dependencies
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: '24'
           cache: 'pnpm'
 
-      # 3. Install project dependencies
       - name: Install dependencies
         run: pnpm install
 
-      # 4. Install Playwright Browsers (CRITICAL FOR CI)
       - name: Install Playwright Browsers
         run: pnpm exec playwright install --with-deps
 
-      # 5. Push Database Schema
       - name: Push Database Schema
         run: pnpm exec drizzle-kit push
 
-      # 6. Seed Database Before Build
       - name: Seed Database Before Build
         run: |
           cat << 'EOF' > seed-ci.ts
@@ -57,7 +51,14 @@ jobs:
           import { products, categories, variants } from "./lib/db/schema";
           async function seed() {
             await db.insert(categories).values({ id: "test-cat", name: "Playwright Category", slug: "playwright-category" }).onConflictDoNothing();
-            await db.insert(products).values({ id: "test-prod", name: "Playwright Product", slug: "playwright-product", description: "Test product", priceKobo: 50000, category_id: "test-cat" }).onConflictDoNothing();
+            await db.insert(products).values({ 
+              id: "test-prod", 
+              name: "Playwright Product", 
+              slug: "playwright-product", 
+              description: "Test product", 
+              priceKobo: 50000, 
+              categoryId: "test-cat" // FIXED HERE
+            }).onConflictDoNothing();
             await db.insert(variants).values({ id: "test-var", productId: "test-prod", name: "Default Variant", sku: "TEST-SKU-001" }).onConflictDoNothing();
             console.log("Database seeded successfully!");
             process.exit(0);
@@ -66,7 +67,6 @@ jobs:
           EOF
           npx -y tsx seed-ci.ts
 
-      # 7. Build App
       - name: Build App
         run: pnpm build
         env:
@@ -76,7 +76,6 @@ jobs:
           BETTER_AUTH_URL: http://localhost:3001
           NEXT_PUBLIC_APP_URL: http://localhost:3001
 
-      # 8. Run E2E Tests (Playwright)
       - name: Run E2E Tests (Playwright)
         run: pnpm exec playwright test
         env:
