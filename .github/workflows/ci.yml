@@ -48,7 +48,7 @@ jobs:
         run: |
           cat << 'EOF' > seed-ci.ts
           import { db } from "./lib/db";
-          import { products, categories, variants } from "./lib/db/schema";
+          import { products, categories, variants, inventory } from "./lib/db/schema";
           async function seed() {
             await db.insert(categories).values({ id: "test-cat", name: "Playwright Category", slug: "playwright-category" }).onConflictDoNothing();
             await db.insert(products).values({ 
@@ -57,9 +57,10 @@ jobs:
               slug: "playwright-product", 
               description: "Test product", 
               priceKobo: 50000, 
-              categoryId: "test-cat" // FIXED HERE
+              categoryId: "test-cat"
             }).onConflictDoNothing();
             await db.insert(variants).values({ id: "test-var", productId: "test-prod", name: "Default Variant", sku: "TEST-SKU-001" }).onConflictDoNothing();
+            await db.insert(inventory).values({ id: "test-inv", variantId: "test-var", quantity: 100 }).onConflictDoNothing();
             console.log("Database seeded successfully!");
             process.exit(0);
           }
