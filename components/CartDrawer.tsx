@@ -1,4 +1,3 @@
-
 'use client';
 
 import { Minus, Plus, ShoppingCart, Trash2 } from 'lucide-react';
@@ -15,7 +14,10 @@ import {
 import { useCartStore } from '@/store/use-cart-store';
 
 export default function CartDrawer() {
-  const { items, _hasHydrated, updateQuantity, removeItem } = useCartStore();
+  const items = useCartStore((state) => state.items);
+  const _hasHydrated = useCartStore((state) => state._hasHydrated);
+  const updateQuantity = useCartStore((state) => state.updateQuantity);
+  const removeItem = useCartStore((state) => state.removeItem);
 
   if (!_hasHydrated) return null;
 

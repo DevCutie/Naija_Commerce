@@ -19,7 +19,6 @@ export default async function ProductPage({
   const resolvedParams = await params;
   const productSlug = resolvedParams.slug;
 
-  // Use Drizzle's inferred type instead of a manual interface
   const product = await db.query.products.findFirst({
     where: eq(products.slug, productSlug),
   });
