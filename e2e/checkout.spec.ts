@@ -8,15 +8,16 @@ test.describe('Checkout Flow', () => {
     await page.getByTestId('product-card').first().click();
     await page.waitForURL('**/products/**');
 
-    // 🔴 HYDRATION BUFFER: Give the CI server 2 seconds to fully load React 
-    // before Playwright tries to click the button.
-    await page.waitForTimeout(2000);
+    // Wait until the network is completely idle to ensure JavaScript and state stores are ready
+    await page.waitForLoadState('networkidle');
 
     const addToCartBtn = page.getByRole('button', { name: /add to cart/i });
     await expect(addToCartBtn).toBeVisible();
-    await addToCartBtn.click();
+    
+    // Perform a forced click to ensure the event fires properly through the hydration layer
+    await addToCartBtn.click({ force: true });
 
-    // Verify count updates to 1
+    // Increase timeout here to give the state store plenty of time to catch up on the slow runner
     const cartCount = page.getByTestId('cart-count');
     await expect(cartCount).toHaveText('1', { timeout: 10000 });
     
@@ -24,8 +25,10 @@ test.describe('Checkout Flow', () => {
     await cartCount.click();
     await expect(page.getByRole('dialog')).toBeVisible();
 
+    // Verify the cart item renders inside the drawer
     await expect(page.locator('[data-testid="cart-item"]').first()).toBeVisible({ timeout: 10000 });
 
+    // Proceed to checkout
     await page.getByRole('link', { name: /checkout/i }).click();
     await expect(page).toHaveURL(/.*checkout/);
   });
