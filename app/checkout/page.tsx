@@ -4,29 +4,22 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { useCartStore } from '@/store/use-cart-store';
-import { usePaystackPayment } from 'react-paystack';
-import { initializePaystackPayment } from './actions';
+import dynamic from 'next/dynamic';
+
+// 🚨 This is the magic fix! It forces the component to only load in the browser.
+const PaystackButton = dynamic(() => import('./PaystackButton'), { 
+  ssr: false,
+  loading: () => <Button className="w-full" size="lg" disabled>Loading payment gateway...</Button>
+});
 
 export default function CheckoutPage() {
   const [isMounted, setIsMounted] = useState(false);
   const [email, setEmail] = useState('');
-  const [isProcessing, setIsProcessing] = useState(false);
-  
   const items = useCartStore((state) => state.items);
-  const clearCart = useCartStore((state) => state.clearCart);
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
-
-  // Set up the basic Paystack Cashier rules
-  const config = {
-    email: email,
-    amount: 0, // We will calculate this securely when they click pay
-    publicKey: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || '',
-  };
-
-  const initializePayment = usePaystackPayment(config);
 
   if (!isMounted) {
     return (
@@ -52,43 +45,6 @@ export default function CheckoutPage() {
     }).format(kobo / 100);
   };
 
-  const handlePayClick = async () => {
-    if (!email) {
-      alert('Please enter your email address first.');
-      return;
-    }
-    
-    setIsProcessing(true);
-
-    try {
-      // 1. The Cashier asks the Manager (Backend) for the secure lockbox ticket
-      const { accessCode, reference } = await initializePaystackPayment(email, totalKobo);
-
-      // 2. The Cashier uses the ticket to pop open the lockbox!
-      initializePayment({
-        config: {
-          ...config,
-          amount: totalKobo,
-          reference: reference, 
-        },
-        onSuccess: (response) => {
-          // STEP 5: We are handling the callbacks right here!
-          alert(`Payment successful! Transaction Ref: ${response.reference}`);
-          clearCart(); // Empty the cart because they bought it!
-          setIsProcessing(false);
-        },
-        onClose: () => {
-          alert('You closed the payment window without paying.');
-          setIsProcessing(false);
-        }
-      });
-    } catch (error) {
-      console.error(error);
-      alert('Something went wrong initializing the payment.');
-      setIsProcessing(false);
-    }
-  };
-
   if (items.length === 0) {
     return (
       <div className="max-w-md mx-auto mt-20 text-center space-y-4">
@@ -111,8 +67,6 @@ export default function CheckoutPage() {
         <div className="space-y-6">
           <div className="bg-slate-50 dark:bg-slate-900 p-6 rounded-lg border border-border">
             <h2 className="text-xl font-semibold mb-4">Customer Details</h2>
-            
-            {/* We added this email input so Paystack knows who is paying! */}
             <div className="space-y-2">
               <label htmlFor="email" className="text-sm font-medium">
                 Email Address
@@ -127,7 +81,6 @@ export default function CheckoutPage() {
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
-            
           </div>
         </div>
 
@@ -173,14 +126,12 @@ export default function CheckoutPage() {
             </div>
           </div>
 
-          <Button 
-            className="w-full" 
-            size="lg" 
-            onClick={handlePayClick}
-            disabled={!email || isProcessing}
-          >
-            {isProcessing ? 'Processing...' : `Pay ${formatNaira(totalKobo)}`}
-          </Button>
+          {/* Render our new dynamic button! */}
+          <PaystackButton 
+            email={email} 
+            totalKobo={totalKobo} 
+            formatNaira={formatNaira} 
+          />
         </div>
       </div>
     </div>
