@@ -1,6 +1,4 @@
-
-
- 🇳🇬 Naija Commerce
+# 🇳🇬 Naija Commerce
 
 ![Coverage](https://img.shields.io/badge/Coverage-100%25-brightgreen.svg)
 ![Version](https://img.shields.io/badge/version-v0.2.0--mvp-blue.svg)
@@ -16,8 +14,8 @@ A high-performance, full-stack e-commerce platform built with Next.js 15, specif
 * **Streaming & Suspense:** Implements React Suspense boundaries for progressive UI rendering, ensuring instant initial page loads.
 * **Edge-Ready Security:** Middleware-enforced Role-Based Access Control (RBAC) and session-based authentication powered by Better-Auth (supporting both Magic Links and Passwords).
 * **Hybrid Cart State:** Utilizes Zustand for lightning-fast client-side cart management, seamlessly bridged to a PostgreSQL backend via Server Actions.
+* **Integrated Payment Gateway:** Features a seamless, server-initialized Paystack Inline Checkout experience with instant transaction verification and cart clearing.
 * **Dynamic Checkout Engine:** Features a hydration-safe checkout experience with real-time NGN VAT (7.5%) computation.
-* **Smart Product Discovery:** Includes dynamic "Recently Viewed" tracking and category-based recommendations.
 * **Robust Data Layer:** Engineered with Drizzle ORM for a schema-first design and type-safe relational queries.
 
 ---
@@ -27,6 +25,7 @@ A high-performance, full-stack e-commerce platform built with Next.js 15, specif
 * **Framework:** Next.js 15 (App Router)
 * **State Management:** Zustand, React Query
 * **Authentication:** Better-Auth
+* **Payments:** Paystack (`react-paystack`)
 * **Database:** PostgreSQL (via Supabase)
 * **ORM:** Drizzle ORM
 * **UI & Styling:** Tailwind CSS v4, shadcn/ui, Radix UI
@@ -61,6 +60,7 @@ The backend is built on a highly structured, relational inventory and checkout e
 * Node.js (Latest LTS)
 * pnpm (`corepack enable pnpm`)
 * Supabase PostgreSQL database
+* Paystack API Keys
 
 ### Installation
 
@@ -88,3 +88,5 @@ Unit Tests: Vitest + React Testing Library (Cart math, NGN formatting, Zod schem
 E2E Tests: Playwright for critical path verification (Browse → Auth → Cart → Checkout).
 
 Pipeline: Automated checks via ci.yml on every pull request.
+
+

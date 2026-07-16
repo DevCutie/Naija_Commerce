@@ -1,0 +1,9 @@
+📔 Day 11 Journal
+What I Built
+Today, I successfully integrated Paystack's inline checkout into NaijaCommerce. I built a server action (initializePaystackPayment) that acts as a secure middleman, taking the total cart value and the customer's email to request an access_code directly from Paystack's API. This ensures my secret keys never touch the browser. On the client side, I wired up the react-paystack package to consume that access code and trigger a seamless, pop-up payment modal right over my checkout page without redirecting the user. I also implemented the callback logic so that the moment a successful test transaction goes through, the cart is automatically emptied.
+
+What Broke
+My CI pipeline completely stalled out today due to a tricky hydration lag issue with my Zustand store. Playwright was clicking the "Add to Cart" button before Next.js and Zustand could fully mount, causing the cart drawer to render as empty in the test environment. I also broke my state updates by mutating the cart array directly instead of returning a brand-new immutable array, and fell into a "stale state closure" trap by using get() instead of an atomic set((state) => ...) update. On the Paystack form, browser autofill ghosts and a double country code blocked me from registering for my keys.
+
+What I Don't Yet Understand
+I am still wrapping my head around exactly how Zustand's persist middleware interacts with React's hydration cycle. I noticed a race condition where if I click "Add to Cart" too quickly on a fresh page load, the local storage sync overwrites my action and swallows the click. I need to figure out how to elegantly lock the UI or queue actions until the persistent storage is 100% synced with the client state.

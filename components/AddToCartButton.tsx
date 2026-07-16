@@ -8,65 +8,67 @@ import { Button } from '@/components/ui/button';
 import { useCartStore } from '@/store/use-cart-store';
 
 interface AddToCartProps {
-	product: {
-		id: string;
-		name: string;
-		priceKobo: number;
-		image?: string;
-	};
-	variantId: string;
-	userId?: string | null;
+  product: {
+    id: string;
+    name: string;
+    priceKobo: number;
+    image?: string;
+  };
+  variantId: string;
+  userId?: string | null;
 }
 
 export default function AddToCartButton({
-	product,
-	variantId,
-	userId = null,
+  product,
+  variantId,
+  userId = null,
 }: AddToCartProps) {
-	const addItem = useCartStore((state) => state.addItem);
-	const [isPending, startTransition] = useTransition();
+  const addItem = useCartStore((state) => state.addItem);
+  // 1. Pull in the hydration status from our store
+  const hasHydrated = useCartStore((state) => state._hasHydrated); 
+  const [isPending, startTransition] = useTransition();
 
-	const handleAdd = () => {
-		const currentQuantity =
-			useCartStore.getState().items.find((i) => i.variantId === variantId)
-				?.quantity || 0;
-		const newQuantity = currentQuantity + 1;
+  const handleAdd = () => {
+    const currentQuantity =
+      useCartStore.getState().items.find((i) => i.variantId === variantId)
+        ?.quantity || 0;
+    const newQuantity = currentQuantity + 1;
 
-		startTransition(async () => {
-			if (userId) {
-				const result = await syncCartItemToDB(userId, variantId, newQuantity);
-				if (!result.success) {
-					toast.error('Network error. Could not sync to your account.');
-					return;
-				}
-			}
+    startTransition(async () => {
+      if (userId) {
+        const result = await syncCartItemToDB(userId, variantId, newQuantity);
+        if (!result.success) {
+          toast.error('Network error. Could not sync to your account.');
+          return;
+        }
+      }
 
-			addItem({
-				variantId: variantId,
-				productId: product.id,
-				name: product.name,
-				priceKobo: product.priceKobo,
-				image: product.image,
-			});
+      addItem({
+        variantId: variantId,
+        productId: product.id,
+        name: product.name,
+        priceKobo: product.priceKobo,
+        image: product.image,
+      });
 
-			toast.success(`${product.name} added to cart!`);
-		});
-	};
+      toast.success(`${product.name} added to cart!`);
+    });
+  };
 
-	return (
-		<Button
-			onClick={handleAdd}
-			size="lg"
-			className="w-full"
-			disabled={isPending}
-			data-testid="add-to-cart"
-		>
-			{isPending ? (
-				<Loader2 className="mr-2 h-4 w-4 animate-spin" />
-			) : (
-				<ShoppingCart className="mr-2 h-4 w-4" />
-			)}
-			{isPending ? 'Adding...' : 'Add to Cart'}
-		</Button>
-	);
+  return (
+    <Button
+      onClick={handleAdd}
+      size="lg"
+      className="w-full"
+      disabled={isPending || !hasHydrated}
+      data-testid="add-to-cart"
+    >
+      {isPending ? (
+        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+      ) : (
+        <ShoppingCart className="mr-2 h-4 w-4" />
+      )}
+      {isPending ? 'Adding...' : (!hasHydrated ? 'Loading Cart...' : 'Add to Cart')}
+    </Button>
+  );
 }
