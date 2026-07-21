@@ -15,6 +15,7 @@ A high-performance, full-stack e-commerce platform built with Next.js 15, specif
 * **Edge-Ready Security:** Middleware-enforced Role-Based Access Control (RBAC) and session-based authentication powered by Better-Auth (supporting both Magic Links and Passwords).
 * **Hybrid Cart State:** Utilizes Zustand for lightning-fast client-side cart management, seamlessly bridged to a PostgreSQL backend via Server Actions.
 * **Integrated Payment Gateway:** Features a seamless, server-initialized Paystack Inline Checkout experience with instant transaction verification and cart clearing.
+  * > **Note:** The current client-side `onSuccess` callback handling is inherently unsafe for production environments. This is a temporary placeholder; Day 12 implementation will migrate this to a secure, idempotent HMAC-SHA512 webhook verification pipeline.
 * **Dynamic Checkout Engine:** Features a hydration-safe checkout experience with real-time NGN VAT (7.5%) computation.
 * **Robust Data Layer:** Engineered with Drizzle ORM for a schema-first design and type-safe relational queries.
 
@@ -65,20 +66,19 @@ The backend is built on a highly structured, relational inventory and checkout e
 ### Installation
 
 ```bash
-# Clone the repo
+
 git clone [https://github.com/DevCutie/Naija_Commerce.git](https://github.com/DevCutie/Naija_Commerce.git)
 cd Naija_Commerce
 
-# Install dependencies
 pnpm install
 
-# Setup env variables
+
 cp .env.example .env.local
 
-# Sync database schema
+
 pnpm exec drizzle-kit push
 
-# Start development
+
 pnpm dev
 🧪 Testing & CI/CD
 This project is guarded by a comprehensive testing suite running on GitHub Actions:
@@ -88,5 +88,3 @@ Unit Tests: Vitest + React Testing Library (Cart math, NGN formatting, Zod schem
 E2E Tests: Playwright for critical path verification (Browse → Auth → Cart → Checkout).
 
 Pipeline: Automated checks via ci.yml on every pull request.
-
-

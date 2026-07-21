@@ -1,10 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { usePaystackPayment } from 'react-paystack';
 import { initializePaystackPayment } from './actions';
 import { useCartStore } from '@/store/use-cart-store';
+import { toast } from 'sonner';
 
 interface PaystackButtonProps {
   email: string;
@@ -15,18 +17,29 @@ interface PaystackButtonProps {
 export default function PaystackButton({ email, totalKobo, formatNaira }: PaystackButtonProps) {
   const [isProcessing, setIsProcessing] = useState(false);
   const clearCart = useCartStore((state) => state.clearCart);
+  const router = useRouter();
 
-  const config = {
+  const publicKey = process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY;
+
+  const config = useMemo(() => ({
     email: email,
-    amount: 0, 
-    publicKey: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || '',
-  };
+    amount: totalKobo, 
+    publicKey: publicKey || '',
+  }), [email, totalKobo, publicKey]);
 
   const initializePayment = usePaystackPayment(config);
 
+  if (!publicKey) {
+    return (
+      <Button className="w-full" size="lg" disabled variant="destructive">
+        Payment Gateway Not Configured
+      </Button>
+    );
+  }
+
   const handlePayClick = async () => {
-    if (!email) {
-      alert('Please enter your email address first.');
+    if (!email || !email.includes('@') || !email.includes('.')) {
+      toast.error('Please enter a valid email address to proceed.');
       return;
     }
     
@@ -38,22 +51,23 @@ export default function PaystackButton({ email, totalKobo, formatNaira }: Paysta
       initializePayment({
         config: {
           ...config,
-          amount: totalKobo,
           reference: reference, 
         },
         onSuccess: (response) => {
-          alert(`Payment successful! Transaction Ref: ${response.reference}`);
+          // 4. Eradicate Alerts & Handle Redirect
+          toast.success('Payment successful!');
           clearCart();
           setIsProcessing(false);
+          router.push(`/order-success?ref=${response.reference}`);
         },
         onClose: () => {
-          alert('You closed the payment window without paying.');
+          toast.info('You closed the payment window without paying.');
           setIsProcessing(false);
         }
       });
     } catch (error) {
       console.error(error);
-      alert('Something went wrong initializing the payment.');
+      toast.error('Something went wrong initializing the payment.');
       setIsProcessing(false);
     }
   };
